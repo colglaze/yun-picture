@@ -1,5 +1,6 @@
 com\colglaze\yunpicture\model\vo\PictureTagCategory.class
 com\colglaze\yunpicture\common\BaseResponse.class
+com\colglaze\yunpicture\annotation\AuthCheck.class
 com\colglaze\yunpicture\common\ResultUtils.class
 com\colglaze\yunpicture\common\PageRequest.class
 com\colglaze\yunpicture\exceptions\ThrowUtils.class
@@ -7,8 +8,11 @@ com\colglaze\yunpicture\model\dto\user\UserRegisterRequest.class
 com\colglaze\yunpicture\constant\UserConstant.class
 com\colglaze\yunpicture\config\CorsConfig.class
 com\colglaze\yunpicture\utils\JwtUtil.class
+com\colglaze\yunpicture\model\dto\user\UserQueryRequest.class
+com\colglaze\yunpicture\aop\AuthInterceptor.class
 com\colglaze\yunpicture\common\DeleteRequest.class
 com\colglaze\yunpicture\mapper\UserMapper.class
+com\colglaze\yunpicture\model\dto\user\UserUpdateRequest.class
 com\colglaze\yunpicture\exceptions\ErrorCode.class
 com\colglaze\yunpicture\model\entity\User.class
 com\colglaze\yunpicture\service\UserService.class
@@ -20,5 +24,7 @@ com\colglaze\yunpicture\controller\UserController.class
 com\colglaze\yunpicture\model\dto\user\UserLoginRequest.class
 com\colglaze\yunpicture\service\impl\UserServiceImpl.class
 com\colglaze\yunpicture\exceptions\BusinessException.class
+com\colglaze\yunpicture\model\dto\user\UserVO.class
+com\colglaze\yunpicture\model\dto\user\UserAddRequest.class
 com\colglaze\yunpicture\exceptions\GlobalExceptionHandler.class
 com\colglaze\yunpicture\model\enums\UserRoleEnum.class

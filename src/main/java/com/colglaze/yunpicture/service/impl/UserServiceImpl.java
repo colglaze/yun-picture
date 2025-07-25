@@ -3,19 +3,27 @@ package com.colglaze.yunpicture.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.colglaze.yunpicture.model.dto.user.UserAddRequest;
 import com.colglaze.yunpicture.model.dto.user.UserLoginRequest;
+import com.colglaze.yunpicture.model.dto.user.UserQueryRequest;
 import com.colglaze.yunpicture.model.entity.User;
 import com.colglaze.yunpicture.exceptions.BusinessException;
 import com.colglaze.yunpicture.exceptions.ErrorCode;
 import com.colglaze.yunpicture.model.dto.user.UserRegisterRequest;
 import com.colglaze.yunpicture.model.vo.LoginUserVO;
+import com.colglaze.yunpicture.model.vo.UserVO;
 import com.colglaze.yunpicture.service.UserService;
 import com.colglaze.yunpicture.mapper.UserMapper;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.colglaze.yunpicture.constant.UserConstant.USER_LOGIN_STATE;
 
@@ -109,6 +117,46 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
         request.getSession().removeAttribute(USER_LOGIN_STATE);
         return true;
+    }
+
+    @Override
+    public Long addUser(UserAddRequest userAddRequest) {
+        //参数校验
+        if (ObjectUtil.isEmpty(userAddRequest)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        String password = DigestUtils.md5Hex("12345678");
+        User user = User.builder().userPassword(password).build();
+        BeanUtil.copyProperties(userAddRequest,user);
+        this.save(user);
+        return user.getId();
+    }
+
+    @Override
+    public Page<UserVO> listUserVoByPage(UserQueryRequest userQueryRequest) {
+        long current = userQueryRequest.getCurrent();
+        long pageSize = userQueryRequest.getPageSize();
+        //构建查询条件
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper();
+        queryWrapper
+                .eq(ObjectUtil.isNotEmpty(userQueryRequest.getId()),User::getId,userQueryRequest.getId())
+                .like(StrUtil.isNotBlank(userQueryRequest.getUserName()),User::getUserName,userQueryRequest.getUserName())
+                .like(StrUtil.isNotBlank(userQueryRequest.getUserAccount()),User::getUserAccount,userQueryRequest.getUserAccount())
+                .like(StrUtil.isNotBlank(userQueryRequest.getUserProfile()),User::getUserProfile,userQueryRequest.getUserProfile())
+                .like(StrUtil.isNotBlank(userQueryRequest.getUserRole()),User::getUserRole,userQueryRequest.getUserRole())
+                .orderBy(true,false,User::getCreateTime);
+        //创建返回分页
+        Page<User> page = this.page(new Page<>(current, pageSize), queryWrapper);
+        Page<UserVO> userVOPage = new Page<>(current, pageSize, page.getTotal());
+        //使用stream流将list<user>转换为list<userVo>
+        List<UserVO> userVos = page.getRecords().stream().map(user -> {
+            UserVO userVO = new UserVO();
+            BeanUtil.copyProperties(user, userVO);
+            return userVO;
+        }).collect(Collectors.toList());
+        //返回结果
+        userVOPage.setRecords(userVos);
+        return userVOPage;
     }
 
 
