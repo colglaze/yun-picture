@@ -1,6 +1,7 @@
 package com.colglaze.yunpicture.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -88,6 +89,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         if (ObjectUtil.isEmpty(one)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR,"用户不存在");
         }
+        String password = DigestUtils.md5Hex(loginRequest.getUserPassword());
+        if (ObjectUtil.notEqual(one.getUserPassword(),password)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,"密码错误");
+        }
         LoginUserVO loginUserVO = new LoginUserVO();
         BeanUtil.copyProperties(one,loginUserVO);
         request.getSession().setAttribute(USER_LOGIN_STATE,one);
@@ -144,7 +149,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                 .like(StrUtil.isNotBlank(userQueryRequest.getUserAccount()),User::getUserAccount,userQueryRequest.getUserAccount())
                 .like(StrUtil.isNotBlank(userQueryRequest.getUserProfile()),User::getUserProfile,userQueryRequest.getUserProfile())
                 .like(StrUtil.isNotBlank(userQueryRequest.getUserRole()),User::getUserRole,userQueryRequest.getUserRole())
-                .orderBy(true,false,User::getCreateTime);
+                .orderBy(true,true,User::getId);
         //创建返回分页
         Page<User> page = this.page(new Page<>(current, pageSize), queryWrapper);
         Page<UserVO> userVOPage = new Page<>(current, pageSize, page.getTotal());

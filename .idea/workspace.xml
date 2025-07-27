@@ -5,31 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/config/JsonConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/config/MyBatisPlusConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/user/UserAddRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/user/UserQueryRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/user/UserUpdateRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/user/UserVO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/2d7b85bb-2b19-45b0-a9ca-0479664690ea.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/2d7b85bb-2b19-45b0-a9ca-0479664690ea.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/ea5a8c20-c824-45f2-ab53-1813e7233df7.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/ea5a8c20-c824-45f2-ab53-1813e7233df7/storage_v2/_src_/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/ea5a8c20-c824-45f2-ab53-1813e7233df7/storage_v2/_src_/schema/mysql.osA4Bg.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/ea5a8c20-c824-45f2-ab53-1813e7233df7/storage_v2/_src_/schema/performance_schema.kIw0nw.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/ea5a8c20-c824-45f2-ab53-1813e7233df7/storage_v2/_src_/schema/sys.zb4BAA.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/ea5a8c20-c824-45f2-ab53-1813e7233df7/storage_v2/_src_/schema/yu_picture.2zYdpA.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/UserService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/controller/UserController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/exceptions/ErrorCode.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/exceptions/ErrorCode.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/service/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/service/UserService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/service/impl/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/service/impl/UserServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/utils/JwtUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/utils/JwtUtil.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-archiver/pom.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
@@ -147,23 +126,26 @@
       <workItem from="1753321208615" duration="4389000" />
       <workItem from="1753329608462" duration="18825000" />
       <workItem from="1753377032239" duration="3797000" />
-      <workItem from="1753404506651" duration="3722000" />
+      <workItem from="1753404506651" duration="11851000" />
+      <workItem from="1753578045790" duration="4704000" />
     </task>
+    <task id="LOCAL-00001" summary="完成了用户的注册登录功能，实现了管理员对用户的管理以及对用户的分页查询">
+      <option name="closed" value="true" />
+      <created>1753408580249</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1753408580249</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/UserServiceImpl.java</url>
-          <line>148</line>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="完成了用户的注册登录功能，实现了管理员对用户的管理以及对用户的分页查询" />
+    <option name="LAST_COMMIT_MESSAGE" value="完成了用户的注册登录功能，实现了管理员对用户的管理以及对用户的分页查询" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

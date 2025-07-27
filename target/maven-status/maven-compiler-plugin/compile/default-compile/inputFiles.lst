@@ -1,3 +1,4 @@
+D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\config\JsonConfig.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\common\ResultUtils.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\utils\JwtUtil.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\model\enums\UserRoleEnum.java
@@ -9,6 +10,7 @@ D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\exceptions\Gl
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\model\dto\user\UserAddRequest.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\YunPictureApplication.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\model\dto\user\UserLoginRequest.java
+D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\config\MyBatisPlusConfig.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\constant\UserConstant.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\exceptions\BusinessException.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\exceptions\ThrowUtils.java

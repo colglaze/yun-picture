@@ -7,6 +7,7 @@ com\colglaze\yunpicture\exceptions\ThrowUtils.class
 com\colglaze\yunpicture\model\dto\user\UserRegisterRequest.class
 com\colglaze\yunpicture\constant\UserConstant.class
 com\colglaze\yunpicture\config\CorsConfig.class
+com\colglaze\yunpicture\config\JsonConfig.class
 com\colglaze\yunpicture\utils\JwtUtil.class
 com\colglaze\yunpicture\model\dto\user\UserQueryRequest.class
 com\colglaze\yunpicture\aop\AuthInterceptor.class
@@ -20,6 +21,7 @@ com\colglaze\yunpicture\YunPictureApplication.class
 com\colglaze\yunpicture\model\vo\UserVO.class
 com\colglaze\yunpicture\model\entity\User$UserBuilder.class
 com\colglaze\yunpicture\model\vo\LoginUserVO.class
+com\colglaze\yunpicture\config\MyBatisPlusConfig.class
 com\colglaze\yunpicture\controller\UserController.class
 com\colglaze\yunpicture\model\dto\user\UserLoginRequest.class
 com\colglaze\yunpicture\service\impl\UserServiceImpl.class
