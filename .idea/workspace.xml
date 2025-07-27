@@ -5,14 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/service/impl/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/service/impl/UserServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-archiver/pom.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/yun-picture-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/yun-picture-0.0.1-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/vo/LoginUserVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/vo/LoginUserVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/controller/UserController.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,7 +123,8 @@
       <workItem from="1753329608462" duration="18825000" />
       <workItem from="1753377032239" duration="3797000" />
       <workItem from="1753404506651" duration="11851000" />
-      <workItem from="1753578045790" duration="4704000" />
+      <workItem from="1753578045790" duration="7356000" />
+      <workItem from="1753624930736" duration="1502000" />
     </task>
     <task id="LOCAL-00001" summary="完成了用户的注册登录功能，实现了管理员对用户的管理以及对用户的分页查询">
       <option name="closed" value="true" />
@@ -137,7 +134,15 @@
       <option name="project" value="LOCAL" />
       <updated>1753408580249</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="修复了登录的小bug">
+      <option name="closed" value="true" />
+      <created>1753597766118</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1753597766118</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -145,7 +150,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="完成了用户的注册登录功能，实现了管理员对用户的管理以及对用户的分页查询" />
-    <option name="LAST_COMMIT_MESSAGE" value="完成了用户的注册登录功能，实现了管理员对用户的管理以及对用户的分页查询" />
+    <MESSAGE value="修复了登录的小bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="修复了登录的小bug" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

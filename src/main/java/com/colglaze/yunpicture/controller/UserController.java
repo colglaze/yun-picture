@@ -108,7 +108,7 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    @AuthCheck(mustRole = ADMIN_ROLE)
+//    @AuthCheck(mustRole = ADMIN_ROLE)
     public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest updateRequest) {
         if (ObjectUtil.isEmpty(updateRequest)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);

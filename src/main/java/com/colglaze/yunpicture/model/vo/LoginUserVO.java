@@ -3,6 +3,7 @@ package com.colglaze.yunpicture.model.vo;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -44,17 +45,32 @@ public class LoginUserVO implements Serializable {
     /**
      * 编辑时间
      */
-    private Date editTime;
+    private LocalDateTime editTime;
 
     /**
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
+
+    /**
+     * 会员过期时间
+     */
+    private LocalDateTime vipExpireTime;
+
+    /**
+     * 会员兑换码
+     */
+    private String vipCode;
+
+    /**
+     * 会员编号
+     */
+    private Long vipNumber;
 
     private static final long serialVersionUID = 1L;
 }
