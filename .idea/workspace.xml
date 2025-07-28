@@ -4,11 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="">
+    <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="更改git上传的文件权限">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/config/CosClientConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/vo/LoginUserVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/vo/LoginUserVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/controller/UserController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/entity/User$UserBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/entity/User$UserBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/entity/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/entity/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/vo/LoginUserVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/vo/LoginUserVO.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,6 +90,9 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\model\vo" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\IdeaWorkSpace\yun-picture" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="YunPictureApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
@@ -124,7 +130,8 @@
       <workItem from="1753377032239" duration="3797000" />
       <workItem from="1753404506651" duration="11851000" />
       <workItem from="1753578045790" duration="7356000" />
-      <workItem from="1753624930736" duration="1502000" />
+      <workItem from="1753624930736" duration="2402000" />
+      <workItem from="1753662253265" duration="2449000" />
     </task>
     <task id="LOCAL-00001" summary="完成了用户的注册登录功能，实现了管理员对用户的管理以及对用户的分页查询">
       <option name="closed" value="true" />
@@ -142,7 +149,31 @@
       <option name="project" value="LOCAL" />
       <updated>1753597766118</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="增加vip的字段">
+      <option name="closed" value="true" />
+      <created>1753630713870</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1753630713870</updated>
+    </task>
+    <task id="LOCAL-00004" summary="更改git上传的文件权限">
+      <option name="closed" value="true" />
+      <created>1753667365502</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1753667365502</updated>
+    </task>
+    <task id="LOCAL-00005" summary="更改git上传的文件权限">
+      <option name="closed" value="true" />
+      <created>1753667864513</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1753667864513</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -151,7 +182,9 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="完成了用户的注册登录功能，实现了管理员对用户的管理以及对用户的分页查询" />
     <MESSAGE value="修复了登录的小bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="修复了登录的小bug" />
+    <MESSAGE value="增加vip的字段" />
+    <MESSAGE value="更改git上传的文件权限" />
+    <option name="LAST_COMMIT_MESSAGE" value="更改git上传的文件权限" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
