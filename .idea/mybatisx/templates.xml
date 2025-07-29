@@ -63,13 +63,13 @@
             </option>
             <option name="needsComment" value="true" />
             <option name="needsModel" value="true" />
-            <option name="relativePackage" value="entity" />
+            <option name="relativePackage" value="model.entity" />
             <option name="superClass" value="" />
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="User" />
-                  <option name="tableName" value="user" />
+                  <option name="className" value="Picture" />
+                  <option name="tableName" value="picture" />
                 </TableUIInfo>
               </list>
             </option>

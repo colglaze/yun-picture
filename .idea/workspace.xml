@@ -4,14 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="更改git上传的文件权限">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/config/CosClientConfig.java" afterDir="false" />
+    <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="git测试">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/FileController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/CosManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/FileManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/file/UploadPictureResult.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/picture/PictureUploadRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/vo/PictureVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/mybatisx/templates.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/mybatisx/templates.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/UserController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/entity/User$UserBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/entity/User$UserBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/entity/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/entity/User.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/vo/LoginUserVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/vo/LoginUserVO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/controller/UserController.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +75,7 @@
     &quot;Spring Boot.YunPictureApplication.executor&quot;: &quot;Run&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/IdeaWorkSpace/yun-picture/src/main/java/com/colglaze/yunpicture/model/vo&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/IdeaWorkSpace/yun-picture/.idea&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -77,7 +84,7 @@
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;MavenSettings&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -88,6 +95,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\IdeaWorkSpace\yun-picture\.idea" />
       <recent name="D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\model\vo" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -131,7 +139,8 @@
       <workItem from="1753404506651" duration="11851000" />
       <workItem from="1753578045790" duration="7356000" />
       <workItem from="1753624930736" duration="2402000" />
-      <workItem from="1753662253265" duration="2449000" />
+      <workItem from="1753662253265" duration="22531000" />
+      <workItem from="1753780241748" duration="4175000" />
     </task>
     <task id="LOCAL-00001" summary="完成了用户的注册登录功能，实现了管理员对用户的管理以及对用户的分页查询">
       <option name="closed" value="true" />
@@ -173,18 +182,50 @@
       <option name="project" value="LOCAL" />
       <updated>1753667864513</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="git测试">
+      <option name="closed" value="true" />
+      <created>1753667921647</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1753667921647</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="完成了用户的注册登录功能，实现了管理员对用户的管理以及对用户的分页查询" />
     <MESSAGE value="修复了登录的小bug" />
     <MESSAGE value="增加vip的字段" />
     <MESSAGE value="更改git上传的文件权限" />
-    <option name="LAST_COMMIT_MESSAGE" value="更改git上传的文件权限" />
+    <MESSAGE value="git测试" />
+    <option name="LAST_COMMIT_MESSAGE" value="git测试" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

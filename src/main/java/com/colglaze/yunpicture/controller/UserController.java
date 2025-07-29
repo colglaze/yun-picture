@@ -16,6 +16,8 @@ import com.colglaze.yunpicture.model.entity.User;
 import com.colglaze.yunpicture.model.vo.LoginUserVO;
 import com.colglaze.yunpicture.model.vo.UserVO;
 import com.colglaze.yunpicture.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.yaml.snakeyaml.events.Event;
@@ -32,10 +34,12 @@ import static com.colglaze.yunpicture.constant.UserConstant.ADMIN_ROLE;
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
+@Api(tags = "用户相关接口")
 public class UserController {
 
     private final UserService userService;
 
+    @ApiOperation("用户注册")
     @PostMapping("/register")
     public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest registerRequest) {
         //参数校验
@@ -46,6 +50,7 @@ public class UserController {
         return ResultUtils.success(result);
     }
 
+    @ApiOperation("用户登录")
     @PostMapping("/login")
     public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest loginRequest, HttpServletRequest request) {
         //参数校验
@@ -57,6 +62,7 @@ public class UserController {
     }
 
 
+    @ApiOperation("获取当前登录用户信息")
     @GetMapping("/get/login")
     public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
         User loginUser = userService.getLoginUser(request);
@@ -66,6 +72,7 @@ public class UserController {
     }
 
 
+    @ApiOperation("用户注销")
     @PostMapping("/logout")
     public BaseResponse<Boolean> userLogout(HttpServletRequest request) {
         ThrowUtils.throwIf(request == null, ErrorCode.PARAMS_ERROR);
@@ -73,6 +80,7 @@ public class UserController {
         return ResultUtils.success(result);
     }
 
+    @ApiOperation("管理员添加用户")
     @PostMapping("/add")
     @AuthCheck(mustRole = ADMIN_ROLE)
     public BaseResponse<Long> addUser(@RequestBody UserAddRequest userAddRequest) {
@@ -80,6 +88,7 @@ public class UserController {
         return ResultUtils.success(userId);
     }
 
+    @ApiOperation("根据id获取用户信息")
     @PostMapping("/get")
     @AuthCheck(mustRole = ADMIN_ROLE)
     public BaseResponse<User> getById(long id) {
@@ -89,6 +98,7 @@ public class UserController {
         return ResultUtils.success(user);
     }
 
+    @ApiOperation("用户根据id获取用户vo")
     @PostMapping("get/vo")
     public BaseResponse<UserVO> getVoById(Long id) {
         User user = userService.getById(id);
@@ -97,6 +107,7 @@ public class UserController {
         return ResultUtils.success(userVO);
     }
 
+    @ApiOperation("根据id删除用户，限管理员")
     @DeleteMapping("/delete")
     @AuthCheck(mustRole = ADMIN_ROLE)
     public BaseResponse<Boolean> deleteUser(@RequestBody DeleteRequest deleteRequest) {
@@ -107,6 +118,7 @@ public class UserController {
         return ResultUtils.success(remove);
     }
 
+    @ApiOperation("更新用户信息")
     @PostMapping("/update")
 //    @AuthCheck(mustRole = ADMIN_ROLE)
     public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest updateRequest) {
@@ -122,6 +134,7 @@ public class UserController {
         return ResultUtils.success(update);
     }
 
+    @ApiOperation("分页查询用户信息")
     @PostMapping("/list/page/vo")
     @AuthCheck(mustRole = ADMIN_ROLE)
     public BaseResponse<Page<UserVO>> listUserVoByPage(@RequestBody UserQueryRequest userQueryRequest){
