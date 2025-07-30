@@ -128,7 +128,7 @@
       <workItem from="1753780241748" duration="8483000" />
       <workItem from="1753846554950" duration="2934000" />
       <workItem from="1753862833069" duration="45000" />
-      <workItem from="1753878279723" duration="9906000" />
+      <workItem from="1753878279723" duration="10223000" />
     </task>
     <task id="LOCAL-00001" summary="完成了用户的注册登录功能，实现了管理员对用户的管理以及对用户的分页查询">
       <option name="closed" value="true" />
@@ -202,7 +202,15 @@
       <option name="project" value="LOCAL" />
       <updated>1753889076441</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="图片的管理功能">
+      <option name="closed" value="true" />
+      <created>1753889431298</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1753889431298</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
