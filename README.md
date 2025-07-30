@@ -20,18 +20,20 @@ cd yun-picture
 - 创建数据库 `yu_picture`
 - 修改 `src/main/resources/application.yml` 中的数据库连接信息
 
-### 3. 配置腾讯云COS
-复制示例配置文件并填入真实配置：
+### 3. 配置本地开发环境
+复制本地配置文件模板并填入真实配置：
 ```bash
-cp src/main/resources/application-example.yml src/main/resources/application-local.yml
+cp src/main/resources/application-local-template.yml src/main/resources/application-local.yml
 ```
 
-编辑 `application-local.yml` 文件，填入你的腾讯云COS配置：
-- `secretId`: 腾讯云 Secret ID
-- `secretKey`: 腾讯云 Secret Key
-- `region`: 存储桶所在地域
-- `bucket`: 存储桶名称
-- `host`: COS访问域名
+编辑 `application-local.yml` 文件，填入你的配置：
+- 数据库连接信息
+- 腾讯云COS配置：
+  - `secretId`: 腾讯云 Secret ID
+  - `secretKey`: 腾讯云 Secret Key
+  - `region`: 存储桶所在地域
+  - `bucket`: 存储桶名称
+  - `host`: COS访问域名
 
 ### 4. 运行项目
 ```bash
