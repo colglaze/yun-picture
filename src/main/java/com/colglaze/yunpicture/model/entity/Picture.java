@@ -7,8 +7,10 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 图片
@@ -17,6 +19,8 @@ import lombok.Data;
 @TableName(value ="picture")
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Picture implements Serializable {
     /**
      * id

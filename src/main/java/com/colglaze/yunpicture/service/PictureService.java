@@ -1,11 +1,15 @@
 package com.colglaze.yunpicture.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.colglaze.yunpicture.model.dto.picture.PictureQueryRequest;
 import com.colglaze.yunpicture.model.dto.picture.PictureUploadRequest;
 import com.colglaze.yunpicture.model.entity.Picture;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.colglaze.yunpicture.model.entity.User;
 import com.colglaze.yunpicture.model.vo.PictureVO;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
 * @author ColorGlaze
@@ -22,4 +26,25 @@ public interface PictureService extends IService<Picture> {
      * @return
      */
     PictureVO uploadPicture(MultipartFile multipartFile, PictureUploadRequest pictureUploadRequest, User loginUser);
+
+    /**
+     * 校验图片
+     * @param picture
+     */
+    void validPicture(Picture picture);
+
+    /**
+     * 查询图片列表
+     * @param pictureQueryRequest
+     * @return
+     */
+    Page<Picture> listPictureByPage(PictureQueryRequest pictureQueryRequest);
+
+    /**
+     * 用户分页查询图片列表
+     * @param pictureQueryRequest
+     * @param request
+     * @return
+     */
+    Page<PictureVO> listPictureVOByPage(PictureQueryRequest pictureQueryRequest, HttpServletRequest request);
 }

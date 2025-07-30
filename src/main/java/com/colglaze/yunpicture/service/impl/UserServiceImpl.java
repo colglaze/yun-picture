@@ -7,6 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.colglaze.yunpicture.model.dto.picture.PictureQueryRequest;
 import com.colglaze.yunpicture.model.dto.user.UserAddRequest;
 import com.colglaze.yunpicture.model.dto.user.UserLoginRequest;
 import com.colglaze.yunpicture.model.dto.user.UserQueryRequest;
@@ -15,6 +16,7 @@ import com.colglaze.yunpicture.exceptions.BusinessException;
 import com.colglaze.yunpicture.exceptions.ErrorCode;
 import com.colglaze.yunpicture.model.dto.user.UserRegisterRequest;
 import com.colglaze.yunpicture.model.vo.LoginUserVO;
+import com.colglaze.yunpicture.model.vo.PictureVO;
 import com.colglaze.yunpicture.model.vo.UserVO;
 import com.colglaze.yunpicture.service.UserService;
 import com.colglaze.yunpicture.mapper.UserMapper;
@@ -163,8 +165,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         userVOPage.setRecords(userVos);
         return userVOPage;
     }
-
-
 }
 
 
