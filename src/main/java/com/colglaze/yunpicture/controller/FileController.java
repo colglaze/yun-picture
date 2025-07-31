@@ -149,7 +149,7 @@ public class FileController {
         ThrowUtils.throwIf(ObjectUtil.hasEmpty(deleteRequest, loginUser), ErrorCode.PARAMS_ERROR, "用户未登录或参数为空");
         Picture picture = pictureService.getById(deleteRequest.getId());
         ThrowUtils.throwIf(ObjectUtil.isEmpty(picture), ErrorCode.NOT_FOUND_ERROR);
-        if (ObjectUtil.equal(picture.getId(), loginUser.getId()) || loginUser.getUserRole() == UserConstant.ADMIN_ROLE) {
+        if (ObjectUtil.equal(picture.getUserId(), loginUser.getId()) || loginUser.getUserRole() == UserConstant.ADMIN_ROLE) {
             Boolean remove = pictureService.removeById(picture);
             return ResultUtils.success(remove);
         }
@@ -252,7 +252,7 @@ public class FileController {
         ThrowUtils.throwIf(ObjectUtil.isEmpty(pictureService.getById(picture.getId())),ErrorCode.NOT_FOUND_ERROR);
         //编辑
         User loginUser = userService.getLoginUser(request);
-        if (loginUser.getUserRole() != UserConstant.ADMIN_ROLE && loginUser.getId() != picture.getUserId()) {
+        if (loginUser.getUserRole() == UserConstant.ADMIN_ROLE || loginUser.getId() == picture.getUserId()) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         boolean update = pictureService.updateById(picture);

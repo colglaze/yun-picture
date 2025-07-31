@@ -57,7 +57,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         String uploadPathPrefix = String.format("public/%s", loginUser.getId());
         UploadPictureResult pictureResult = fileManager.uploadPicture(multipartFile, uploadPathPrefix);
         //构造入库信息
-        Picture picture = Picture.builder().userId(loginUser.getId()).build();
+        Picture picture = Picture.builder().userId(loginUser.getId()).name(pictureResult.getPicName()).build();
         BeanUtil.copyProperties(pictureResult, picture);
         //pictureId不为空，更新，补充id和编辑时间
         Long pictureId = pictureUploadRequest.getId();
@@ -67,7 +67,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         }
         //否则直接入库
         boolean update = this.saveOrUpdate(picture);
-        ThrowUtils.throwIf(update, ErrorCode.OPERATION_ERROR, "图片上传失败");
+        ThrowUtils.throwIf(!update, ErrorCode.OPERATION_ERROR, "图片上传失败");
         return PictureVO.objToVo(picture);
     }
 
