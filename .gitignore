@@ -10,6 +10,7 @@ target/
 src/main/resources/application-local.yml
 src/main/resources/application-prod.yml
 src/main/resources/application-dev.yml
+src/main/resources/application.yml
 
 # IDE
 .idea/
@@ -22,3 +23,5 @@ src/main/resources/application-dev.yml
 # 临时文件
 *.tmp
 *.temp
+
+
