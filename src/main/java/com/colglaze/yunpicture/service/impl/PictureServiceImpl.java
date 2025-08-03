@@ -8,15 +8,18 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.colglaze.yunpicture.constant.UserConstant;
 import com.colglaze.yunpicture.exceptions.BusinessException;
 import com.colglaze.yunpicture.exceptions.ErrorCode;
 import com.colglaze.yunpicture.exceptions.ThrowUtils;
 import com.colglaze.yunpicture.manager.FileManager;
 import com.colglaze.yunpicture.model.dto.file.UploadPictureResult;
 import com.colglaze.yunpicture.model.dto.picture.PictureQueryRequest;
+import com.colglaze.yunpicture.model.dto.picture.PictureReviewRequest;
 import com.colglaze.yunpicture.model.dto.picture.PictureUploadRequest;
 import com.colglaze.yunpicture.model.entity.Picture;
 import com.colglaze.yunpicture.model.entity.User;
+import com.colglaze.yunpicture.model.enums.PictureReviewStatusEnum;
 import com.colglaze.yunpicture.model.vo.PictureVO;
 import com.colglaze.yunpicture.model.vo.UserVO;
 import com.colglaze.yunpicture.service.PictureService;
@@ -27,7 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -58,12 +61,18 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         UploadPictureResult pictureResult = fileManager.uploadPicture(multipartFile, uploadPathPrefix);
         //构造入库信息
         Picture picture = Picture.builder().userId(loginUser.getId()).name(pictureResult.getPicName()).build();
+        this.fillReviewParams(picture, loginUser);
         BeanUtil.copyProperties(pictureResult, picture);
         //pictureId不为空，更新，补充id和编辑时间
         Long pictureId = pictureUploadRequest.getId();
         if (ObjectUtil.isNotEmpty(pictureId)) {
-            picture.setId(pictureId);
-            picture.setEditTime(new Date());
+            //权限校验
+            if (ObjectUtil.equal(picture.getUserId(), loginUser.getId()) ||
+                    StrUtil.equals(loginUser.getUserRole(), UserConstant.ADMIN_ROLE)) {
+                picture.setId(pictureId);
+                picture.setEditTime(LocalDateTime.now());
+            }
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "只有本人和管理员才可以编辑图片");
         }
         //否则直接入库
         boolean update = this.saveOrUpdate(picture);
@@ -89,12 +98,17 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
     }
 
     @Override
-    public Page<Picture> listPictureByPage(PictureQueryRequest queryRequest) {
+    public Page<Picture> listPictureByPage(PictureQueryRequest queryRequest, HttpServletRequest request) {
         int current = queryRequest.getCurrent();
         int pageSize = queryRequest.getPageSize();
         //参数校验
         if (ObjectUtil.hasEmpty(current, pageSize)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        //审核条件构建
+        User loginUser = userService.getLoginUser(request);
+        if (StrUtil.equals(loginUser.getUserRole(), UserConstant.DEFAULT_ROLE)) {
+            queryRequest.setReviewStatus(PictureReviewStatusEnum.PASS.getValue());
         }
         //构建查询条件
         LambdaQueryWrapper<Picture> queryWrapper = new LambdaQueryWrapper<>();
@@ -107,7 +121,8 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
                 .eq(ObjectUtil.isNotEmpty(queryRequest.getPicWidth()), Picture::getPicWidth, queryRequest.getPicWidth())
                 .eq(ObjectUtil.isNotEmpty(queryRequest.getPicHeight()), Picture::getPicHeight, queryRequest.getPicHeight())
                 .eq(ObjectUtil.isNotEmpty(queryRequest.getPicSize()), Picture::getPicSize, queryRequest.getPicSize())
-                .eq(ObjectUtil.isNotEmpty(queryRequest.getPicScale()), Picture::getPicScale, queryRequest.getPicScale());
+                .eq(ObjectUtil.isNotEmpty(queryRequest.getPicScale()), Picture::getPicScale, queryRequest.getPicScale())
+                .eq(ObjectUtil.isNotEmpty(queryRequest.getReviewStatus()), Picture::getReviewStatus, queryRequest.getReviewStatus());
         if (StrUtil.isNotBlank(queryRequest.getSearchText())) {
             queryWrapper.and(qw -> {
                 qw.like(Picture::getIntroduction, queryRequest.getIntroduction())
@@ -129,9 +144,9 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
 
     @Override
     public Page<PictureVO> listPictureVOByPage(PictureQueryRequest pictureQueryRequest, HttpServletRequest request) {
-        Page<Picture> picturePage = listPictureByPage(pictureQueryRequest);
+        Page<Picture> picturePage = listPictureByPage(pictureQueryRequest, request);
         //封装数据
-        Page<PictureVO> voPage = new Page<>(picturePage.getCurrent(),picturePage.getSize(),picturePage.getTotal());
+        Page<PictureVO> voPage = new Page<>(picturePage.getCurrent(), picturePage.getSize(), picturePage.getTotal());
         List<Picture> records = picturePage.getRecords();
         if (ArrayUtil.isEmpty(records)) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
@@ -142,11 +157,46 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         Map<Long, User> userMap = userService.listByIds(userIds).stream().collect(Collectors.toMap(User::getId, user -> user));
         for (PictureVO pictureVO : voList) {
             UserVO userVO = new UserVO();
-            BeanUtil.copyProperties(userMap.get(pictureVO.getUserId()),userVO);
+            BeanUtil.copyProperties(userMap.get(pictureVO.getUserId()), userVO);
             pictureVO.setUser(userVO);
         }
         voPage.setRecords(voList);
         return voPage;
+    }
+
+    @Override
+    public void doPictureReview(PictureReviewRequest pictureReviewRequest, User loginUser) {
+        //获取审核状态
+        PictureReviewStatusEnum pictureStatus = PictureReviewStatusEnum
+                .getEnumByValue(pictureReviewRequest.getReviewStatus());
+
+        //判断是否存在
+        Picture picture = this.getById(pictureReviewRequest.getId());
+        if (ObjectUtil.isEmpty(picture)) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "图片不存在");
+        }
+        //判断审核状态是否为未审核
+        if (ObjectUtil.equal(pictureStatus, picture.getReviewStatus())) {
+            //更新
+            picture.setReviewStatus(pictureStatus.getValue());
+            picture.setReviewerId(loginUser.getId());
+            picture.setReviewTime(LocalDateTime.now());
+            this.updateById(picture);
+        }
+        throw new BusinessException(ErrorCode.PARAMS_ERROR, "请勿重复审核");
+    }
+
+    @Override
+    public void fillReviewParams(Picture picture, User loginUser) {
+        if (StrUtil.equals(loginUser.getUserRole(), UserConstant.ADMIN_ROLE)) {
+            //管理员自动过审
+            picture.setReviewerId(loginUser.getId());
+            picture.setReviewMessage("管理员自动过审");
+            picture.setReviewTime(LocalDateTime.now());
+            picture.setReviewStatus(PictureReviewStatusEnum.PASS.getValue());
+        } else {
+            picture.setReviewStatus(PictureReviewStatusEnum.REVIEWING.getValue());
+        }
     }
 
 }

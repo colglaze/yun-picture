@@ -2,6 +2,7 @@ package com.colglaze.yunpicture.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.colglaze.yunpicture.annotation.AuthCheck;
@@ -13,12 +14,10 @@ import com.colglaze.yunpicture.exceptions.BusinessException;
 import com.colglaze.yunpicture.exceptions.ErrorCode;
 import com.colglaze.yunpicture.exceptions.ThrowUtils;
 import com.colglaze.yunpicture.manager.CosManager;
-import com.colglaze.yunpicture.model.dto.picture.PictureEditRequest;
-import com.colglaze.yunpicture.model.dto.picture.PictureQueryRequest;
-import com.colglaze.yunpicture.model.dto.picture.PictureUpdateRequest;
-import com.colglaze.yunpicture.model.dto.picture.PictureUploadRequest;
+import com.colglaze.yunpicture.model.dto.picture.*;
 import com.colglaze.yunpicture.model.entity.Picture;
 import com.colglaze.yunpicture.model.entity.User;
+import com.colglaze.yunpicture.model.vo.PictureTagCategory;
 import com.colglaze.yunpicture.model.vo.PictureVO;
 import com.colglaze.yunpicture.service.PictureService;
 import com.colglaze.yunpicture.service.UserService;
@@ -37,7 +36,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /*
 @author ColGlaze
@@ -128,7 +130,7 @@ public class FileController {
      */
     @PostMapping("/upload")
     @ApiOperation("上传图片")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+//    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<PictureVO> uploadPicture(
             @RequestPart("file") MultipartFile multipartFile,
             PictureUploadRequest pictureUploadRequest,
@@ -149,7 +151,7 @@ public class FileController {
         ThrowUtils.throwIf(ObjectUtil.hasEmpty(deleteRequest, loginUser), ErrorCode.PARAMS_ERROR, "用户未登录或参数为空");
         Picture picture = pictureService.getById(deleteRequest.getId());
         ThrowUtils.throwIf(ObjectUtil.isEmpty(picture), ErrorCode.NOT_FOUND_ERROR);
-        if (ObjectUtil.equal(picture.getUserId(), loginUser.getId()) || loginUser.getUserRole() == UserConstant.ADMIN_ROLE) {
+        if (ObjectUtil.equal(picture.getUserId(), loginUser.getId()) || StrUtil.equals(loginUser.getUserRole(), UserConstant.ADMIN_ROLE)) {
             Boolean remove = pictureService.removeById(picture);
             return ResultUtils.success(remove);
         }
@@ -162,7 +164,7 @@ public class FileController {
     @PostMapping("/update")
     @ApiOperation("更新图片")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> updatePicture(@RequestBody PictureUpdateRequest pictureUpdateRequest) {
+    public BaseResponse<Boolean> updatePicture(@RequestBody PictureUpdateRequest pictureUpdateRequest, HttpServletRequest request) {
         ThrowUtils.throwIf(ObjectUtil.isEmpty(pictureUpdateRequest), ErrorCode.PARAMS_ERROR);
         Picture picture = new Picture();
         BeanUtil.copyProperties(pictureUpdateRequest, picture);
@@ -174,6 +176,7 @@ public class FileController {
         }
         //校验图片信息
         pictureService.validPicture(picture);
+        pictureService.fillReviewParams(picture, userService.getLoginUser(request));
         boolean update = pictureService.updateById(picture);
         if (!update) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR);
@@ -192,7 +195,7 @@ public class FileController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         Picture picture = pictureService.getById(id);
-        ThrowUtils.throwIf(ObjectUtil.isEmpty(picture),ErrorCode.NOT_FOUND_ERROR);
+        ThrowUtils.throwIf(ObjectUtil.isEmpty(picture), ErrorCode.NOT_FOUND_ERROR);
         return ResultUtils.success(picture);
     }
 
@@ -206,7 +209,7 @@ public class FileController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         Picture picture = pictureService.getById(id);
-        ThrowUtils.throwIf(ObjectUtil.isEmpty(picture),ErrorCode.NOT_FOUND_ERROR);
+        ThrowUtils.throwIf(ObjectUtil.isEmpty(picture), ErrorCode.NOT_FOUND_ERROR);
         PictureVO pictureVO = PictureVO.objToVo(picture);
         return ResultUtils.success(pictureVO);
     }
@@ -217,8 +220,8 @@ public class FileController {
     @PostMapping("/list/page")
     @ApiOperation("分页获取图片列表")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Page<Picture>> listPictureByPage(@RequestBody PictureQueryRequest pictureQueryRequest) {
-        Page<Picture> picturePage = pictureService.listPictureByPage(pictureQueryRequest);
+    public BaseResponse<Page<Picture>> listPictureByPage(@RequestBody PictureQueryRequest pictureQueryRequest, HttpServletRequest request) {
+        Page<Picture> picturePage = pictureService.listPictureByPage(pictureQueryRequest, request);
         return ResultUtils.success(picturePage);
     }
 
@@ -229,7 +232,7 @@ public class FileController {
     @ApiOperation("分页获取图片列表list<vo>")
     public BaseResponse<Page<PictureVO>> listPictureVOByPage(@RequestBody PictureQueryRequest pictureQueryRequest,
                                                              HttpServletRequest request) {
-        Page<PictureVO> pictureVOPage = pictureService.listPictureVOByPage(pictureQueryRequest,request);
+        Page<PictureVO> pictureVOPage = pictureService.listPictureVOByPage(pictureQueryRequest, request);
         return ResultUtils.success(pictureVOPage);
     }
 
@@ -244,20 +247,42 @@ public class FileController {
         }
         //指定修改类
         Picture picture = new Picture();
-        BeanUtil.copyProperties(pictureEditRequest,picture);
+        BeanUtil.copyProperties(pictureEditRequest, picture);
         picture.setTags(JSONUtil.toJsonStr(pictureEditRequest.getTags()));
-        picture.setEditTime(new Date());
+        picture.setEditTime(LocalDateTime.now());
         //图片校验
         pictureService.validPicture(picture);
-        ThrowUtils.throwIf(ObjectUtil.isEmpty(pictureService.getById(picture.getId())),ErrorCode.NOT_FOUND_ERROR);
+        ThrowUtils.throwIf(ObjectUtil.isEmpty(pictureService.getById(picture.getId())), ErrorCode.NOT_FOUND_ERROR);
         //编辑
         User loginUser = userService.getLoginUser(request);
-        if (loginUser.getUserRole() == UserConstant.ADMIN_ROLE || loginUser.getId() == picture.getUserId()) {
-            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+        if (StrUtil.equals(loginUser.getUserRole(), UserConstant.ADMIN_ROLE) || ObjectUtil.equal(loginUser.getId(), picture.getUserId())) {
+            pictureService.fillReviewParams(picture, loginUser);
+            boolean update = pictureService.updateById(picture);
+            return ResultUtils.success(update);
         }
-        boolean update = pictureService.updateById(picture);
+        throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
 
-        return ResultUtils.success(update);
+    }
+
+    @GetMapping("/tag_category")
+    public BaseResponse<PictureTagCategory> listPictureTagCategory() {
+        PictureTagCategory pictureTagCategory = new PictureTagCategory();
+        List<String> tagList = Arrays.asList("热门", "搞笑", "生活", "高清", "艺术", "校园", "背景", "简历", "创意", "美女");
+        List<String> categoryList = Arrays.asList("模板", "电商", "表情包", "素材", "海报", "二次元");
+        pictureTagCategory.setTagList(tagList);
+        pictureTagCategory.setCategoryList(categoryList);
+        return ResultUtils.success(pictureTagCategory);
+    }
+
+    @PostMapping("/review")
+    @ApiOperation("审核图片")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Boolean> doPictureReview(@RequestBody PictureReviewRequest pictureReviewRequest,
+                                                 HttpServletRequest request) {
+        ThrowUtils.throwIf(pictureReviewRequest == null, ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        pictureService.doPictureReview(pictureReviewRequest, loginUser);
+        return ResultUtils.success(true);
     }
 
 

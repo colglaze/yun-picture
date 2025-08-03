@@ -65,4 +65,5 @@ public interface UserService extends IService<User> {
      */
     Page<UserVO> listUserVoByPage(UserQueryRequest userQueryRequest);
 
+
 }

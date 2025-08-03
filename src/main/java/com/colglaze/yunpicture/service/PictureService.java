@@ -2,6 +2,7 @@ package com.colglaze.yunpicture.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.colglaze.yunpicture.model.dto.picture.PictureQueryRequest;
+import com.colglaze.yunpicture.model.dto.picture.PictureReviewRequest;
 import com.colglaze.yunpicture.model.dto.picture.PictureUploadRequest;
 import com.colglaze.yunpicture.model.entity.Picture;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -35,10 +36,12 @@ public interface PictureService extends IService<Picture> {
 
     /**
      * 查询图片列表
+     *
      * @param pictureQueryRequest
+     * @param request
      * @return
      */
-    Page<Picture> listPictureByPage(PictureQueryRequest pictureQueryRequest);
+    Page<Picture> listPictureByPage(PictureQueryRequest pictureQueryRequest, HttpServletRequest request);
 
     /**
      * 用户分页查询图片列表
@@ -47,4 +50,18 @@ public interface PictureService extends IService<Picture> {
      * @return
      */
     Page<PictureVO> listPictureVOByPage(PictureQueryRequest pictureQueryRequest, HttpServletRequest request);
+
+    /**
+     * 审核图片功能
+     * @param pictureReviewRequest
+     * @param loginUser
+     */
+    void doPictureReview(PictureReviewRequest pictureReviewRequest, User loginUser);
+
+    /**
+     * 自动填充审核参数
+     * @param picture
+     * @param loginUser
+     */
+    void fillReviewParams(Picture picture,User loginUser);
 }

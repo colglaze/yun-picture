@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -86,17 +87,17 @@ public class Picture implements Serializable {
     /**
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 编辑时间
      */
-    private Date editTime;
+    private LocalDateTime editTime;
 
     /**
      * 更新时间
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 是否删除
@@ -121,7 +122,7 @@ public class Picture implements Serializable {
     /**
      * 审核时间
      */
-    private Date reviewTime;
+    private LocalDateTime reviewTime;
 
     /**
      * 缩略图 url
