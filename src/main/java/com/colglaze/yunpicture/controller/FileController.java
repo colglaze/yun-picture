@@ -220,8 +220,8 @@ public class FileController {
     @PostMapping("/list/page")
     @ApiOperation("分页获取图片列表")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Page<Picture>> listPictureByPage(@RequestBody PictureQueryRequest pictureQueryRequest, HttpServletRequest request) {
-        Page<Picture> picturePage = pictureService.listPictureByPage(pictureQueryRequest, request);
+    public BaseResponse<Page<Picture>> listPictureByPage(@RequestBody PictureQueryRequest pictureQueryRequest) {
+        Page<Picture> picturePage = pictureService.listPictureByPage(pictureQueryRequest, false);
         return ResultUtils.success(picturePage);
     }
 
@@ -253,6 +253,7 @@ public class FileController {
         //图片校验
         pictureService.validPicture(picture);
         ThrowUtils.throwIf(ObjectUtil.isEmpty(pictureService.getById(picture.getId())), ErrorCode.NOT_FOUND_ERROR);
+        picture.setUserId(pictureService.getById(picture.getId()).getUserId());
         //编辑
         User loginUser = userService.getLoginUser(request);
         if (StrUtil.equals(loginUser.getUserRole(), UserConstant.ADMIN_ROLE) || ObjectUtil.equal(loginUser.getId(), picture.getUserId())) {

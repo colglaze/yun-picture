@@ -38,10 +38,10 @@ public interface PictureService extends IService<Picture> {
      * 查询图片列表
      *
      * @param pictureQueryRequest
-     * @param request
+     * @param isDefault
      * @return
      */
-    Page<Picture> listPictureByPage(PictureQueryRequest pictureQueryRequest, HttpServletRequest request);
+    Page<Picture> listPictureByPage(PictureQueryRequest pictureQueryRequest, boolean isDefault);
 
     /**
      * 用户分页查询图片列表

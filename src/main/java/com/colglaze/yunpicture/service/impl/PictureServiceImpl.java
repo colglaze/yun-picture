@@ -98,7 +98,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
     }
 
     @Override
-    public Page<Picture> listPictureByPage(PictureQueryRequest queryRequest, HttpServletRequest request) {
+    public Page<Picture> listPictureByPage(PictureQueryRequest queryRequest, boolean isDefault) {
         int current = queryRequest.getCurrent();
         int pageSize = queryRequest.getPageSize();
         //参数校验
@@ -106,8 +106,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         //审核条件构建
-        User loginUser = userService.getLoginUser(request);
-        if (StrUtil.equals(loginUser.getUserRole(), UserConstant.DEFAULT_ROLE)) {
+        if (isDefault) {
             queryRequest.setReviewStatus(PictureReviewStatusEnum.PASS.getValue());
         }
         //构建查询条件
@@ -122,7 +121,8 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
                 .eq(ObjectUtil.isNotEmpty(queryRequest.getPicHeight()), Picture::getPicHeight, queryRequest.getPicHeight())
                 .eq(ObjectUtil.isNotEmpty(queryRequest.getPicSize()), Picture::getPicSize, queryRequest.getPicSize())
                 .eq(ObjectUtil.isNotEmpty(queryRequest.getPicScale()), Picture::getPicScale, queryRequest.getPicScale())
-                .eq(ObjectUtil.isNotEmpty(queryRequest.getReviewStatus()), Picture::getReviewStatus, queryRequest.getReviewStatus());
+                .eq(isDefault || ObjectUtil.isNotEmpty(queryRequest.getReviewStatus())
+                        , Picture::getReviewStatus, queryRequest.getReviewStatus());
         if (StrUtil.isNotBlank(queryRequest.getSearchText())) {
             queryWrapper.and(qw -> {
                 qw.like(Picture::getIntroduction, queryRequest.getIntroduction())
@@ -144,7 +144,15 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
 
     @Override
     public Page<PictureVO> listPictureVOByPage(PictureQueryRequest pictureQueryRequest, HttpServletRequest request) {
-        Page<Picture> picturePage = listPictureByPage(pictureQueryRequest, request);
+        boolean isDefault = false;
+        if (ObjectUtil.isEmpty(request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE))) {
+            isDefault = true;
+        } else {
+            if (StrUtil.equals(userService.getLoginUser(request).getUserRole(), UserConstant.DEFAULT_ROLE)) {
+                isDefault = true;
+            }
+        }
+        Page<Picture> picturePage = listPictureByPage(pictureQueryRequest, isDefault);
         //封装数据
         Page<PictureVO> voPage = new Page<>(picturePage.getCurrent(), picturePage.getSize(), picturePage.getTotal());
         List<Picture> records = picturePage.getRecords();
@@ -176,12 +184,13 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "图片不存在");
         }
         //判断审核状态是否为未审核
-        if (ObjectUtil.equal(pictureStatus, picture.getReviewStatus())) {
+        if (ObjectUtil.notEqual(pictureStatus.getValue(), picture.getReviewStatus())) {
             //更新
             picture.setReviewStatus(pictureStatus.getValue());
             picture.setReviewerId(loginUser.getId());
             picture.setReviewTime(LocalDateTime.now());
             this.updateById(picture);
+            return;
         }
         throw new BusinessException(ErrorCode.PARAMS_ERROR, "请勿重复审核");
     }
