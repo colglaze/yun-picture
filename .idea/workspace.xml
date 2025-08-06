@@ -4,9 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="审核功能的开发">
+    <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="用户上传图片bug修复">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/picture/PictureUploadByBatchRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/FileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/FileController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/FileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/FileManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/picture/PictureUploadRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/picture/PictureUploadRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/PictureService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/PictureService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/PictureServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/PictureServiceImpl.java" afterDir="false" />
     </list>
@@ -136,6 +140,7 @@
       <workItem from="1753878279723" duration="10927000" />
       <workItem from="1754097768439" duration="5085000" />
       <workItem from="1754188425730" duration="22141000" />
+      <workItem from="1754382977857" duration="11054000" />
     </task>
     <task id="LOCAL-00001" summary="完成了用户的注册登录功能，实现了管理员对用户的管理以及对用户的分页查询">
       <option name="closed" value="true" />
@@ -241,7 +246,15 @@
       <option name="project" value="LOCAL" />
       <updated>1754192294616</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="用户上传图片bug修复">
+      <option name="closed" value="true" />
+      <created>1754383032667</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1754383032667</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -281,7 +294,8 @@
     <MESSAGE value="忽略敏感信息" />
     <MESSAGE value="小bug修改" />
     <MESSAGE value="审核功能的开发" />
-    <option name="LAST_COMMIT_MESSAGE" value="审核功能的开发" />
+    <MESSAGE value="用户上传图片bug修复" />
+    <option name="LAST_COMMIT_MESSAGE" value="用户上传图片bug修复" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

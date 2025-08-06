@@ -3,6 +3,7 @@ package com.colglaze.yunpicture.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.colglaze.yunpicture.model.dto.picture.PictureQueryRequest;
 import com.colglaze.yunpicture.model.dto.picture.PictureReviewRequest;
+import com.colglaze.yunpicture.model.dto.picture.PictureUploadByBatchRequest;
 import com.colglaze.yunpicture.model.dto.picture.PictureUploadRequest;
 import com.colglaze.yunpicture.model.entity.Picture;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -64,4 +65,21 @@ public interface PictureService extends IService<Picture> {
      * @param loginUser
      */
     void fillReviewParams(Picture picture,User loginUser);
+
+    /**
+     * 通过url上传图片
+     * @param fileUrl
+     * @param pictureUploadRequest
+     * @param loginUser
+     * @return
+     */
+    PictureVO uploadPicture(String fileUrl, PictureUploadRequest pictureUploadRequest, User loginUser);
+
+    /**
+     * 批量上传图片
+     * @param pictureUploadByBatchRequest
+     * @param loginUser
+     * @return
+     */
+    int uploadPictureByBatch(PictureUploadByBatchRequest pictureUploadByBatchRequest, User loginUser);
 }
