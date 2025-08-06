@@ -12,6 +12,7 @@ import com.colglaze.yunpicture.model.vo.PictureVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 /**
 * @author ColorGlaze
@@ -27,7 +28,7 @@ public interface PictureService extends IService<Picture> {
      * @param loginUser
      * @return
      */
-    PictureVO uploadPicture(MultipartFile multipartFile, PictureUploadRequest pictureUploadRequest, User loginUser);
+    PictureVO uploadPicture(MultipartFile multipartFile, PictureUploadRequest pictureUploadRequest, User loginUser) throws IOException;
 
     /**
      * 校验图片
