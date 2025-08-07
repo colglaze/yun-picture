@@ -22,7 +22,7 @@ public class AipConfig {
         // 初始化一个AipImageClassify
         AipImageClassify client = new AipImageClassify(appId, apiKey, secretKey);
         // 可选：设置网络连接参数
-        client.setConnectionTimeoutInMillis(30000);
+        client.setConnectionTimeoutInMillis(3000);
         client.setSocketTimeoutInMillis(60000);
         return client;
     }

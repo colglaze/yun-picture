@@ -4,14 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="批量上传图片以及通过url上传图片功能开发">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/config/AipConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/ImageMetadataService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/picture/ImageMetadata.java" afterDir="false" />
+    <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="ai识图，为图片添加基本信息初步开发">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/FileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/FileController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/PictureService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/PictureService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/config/AipConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/config/AipConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/FileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/FileManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/ImageMetadataService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/ImageMetadataManage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/PictureServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/PictureServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -66,7 +63,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Spring Boot.YunPictureApplication.executor": "Debug",
+    "Spring Boot.YunPictureApplication.executor": "Run",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/IdeaWorkSpace/yun-picture/.idea",
@@ -140,7 +137,7 @@
       <workItem from="1753878279723" duration="10927000" />
       <workItem from="1754097768439" duration="5085000" />
       <workItem from="1754188425730" duration="22141000" />
-      <workItem from="1754382977857" duration="15721000" />
+      <workItem from="1754382977857" duration="20244000" />
     </task>
     <task id="LOCAL-00001" summary="完成了用户的注册登录功能，实现了管理员对用户的管理以及对用户的分页查询">
       <option name="closed" value="true" />
@@ -262,7 +259,15 @@
       <option name="project" value="LOCAL" />
       <updated>1754489683170</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="ai识图，为图片添加基本信息初步开发">
+      <option name="closed" value="true" />
+      <created>1754495003728</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1754495003728</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -304,18 +309,8 @@
     <MESSAGE value="审核功能的开发" />
     <MESSAGE value="用户上传图片bug修复" />
     <MESSAGE value="批量上传图片以及通过url上传图片功能开发" />
-    <option name="LAST_COMMIT_MESSAGE" value="批量上传图片以及通过url上传图片功能开发" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/ImageMetadataService.java</url>
-          <line>29</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="ai识图，为图片添加基本信息初步开发" />
+    <option name="LAST_COMMIT_MESSAGE" value="ai识图，为图片添加基本信息初步开发" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -15,7 +15,7 @@ import com.colglaze.yunpicture.exceptions.ErrorCode;
 import com.colglaze.yunpicture.exceptions.ThrowUtils;
 import com.colglaze.yunpicture.manager.FileManager;
 
-import com.colglaze.yunpicture.manager.ImageMetadataService;
+import com.colglaze.yunpicture.manager.ImageMetadataManage;
 import com.colglaze.yunpicture.model.dto.file.UploadPictureResult;
 import com.colglaze.yunpicture.model.dto.picture.*;
 import com.colglaze.yunpicture.model.entity.Picture;
@@ -37,6 +37,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +58,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
 
     private final FileManager fileManager;
     private final UserService userService;
-    private final ImageMetadataService imageMetadataService;
+    private final ImageMetadataManage imageMetadataService;
 
     @Override
     public PictureVO uploadPicture(MultipartFile multipartFile, PictureUploadRequest pictureUploadRequest, User loginUser) throws IOException {
@@ -68,11 +70,11 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
 
         //按照用户id划分目录
         String uploadPathPrefix = String.format("public/%s", loginUser.getId());
-        //
-        ImageMetadata imageMetadata = imageMetadataService.generateMetadata(multipartFile);
+        //校验图片格式
+        fileManager.validPicture(multipartFile);
+        ImageMetadata imageMetadata = imageMetadataService.generateMetadata(multipartFile.getBytes());
         UploadPictureResult pictureResult = fileManager.uploadPicture(multipartFile, uploadPathPrefix);
         //构造入库信息
-
         Picture picture = Picture.builder().userId(loginUser.getId()).build();
         BeanUtil.copyProperties(imageMetadata,picture);
         String tags = JSONUtil.toJsonStr(imageMetadata.getTags());
@@ -233,15 +235,26 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         //上传图片，得到信息
         //按照用户id划分目录
         String uploadPathPrefix = String.format("public/%s", loginUser.getId());
+        //校验图片
+        fileManager.validPicture(fileUrl);
+        //ai填充信息
+        ImageMetadata imageMetadata = null;
+        try {
+             imageMetadata = imageMetadataService.generateMetadata(downloadImageFromUrl(fileUrl));
+        } catch (IOException e) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR,"文件传输错误");
+        }
         UploadPictureResult pictureResult = fileManager.uploadPictureByUrl(fileUrl, uploadPathPrefix);
         //构造入库信息
         // 构造要入库的图片信息
-        Picture picture = Picture.builder().userId(loginUser.getId()).name(pictureResult.getPicName()).build();
-        String picName = pictureResult.getPicName();
-        if (StrUtil.isNotBlank(pictureUploadRequest.getPicName())) {
-            picName = pictureUploadRequest.getPicName();
-        }
-        picture.setName(picName);
+        Picture picture = Picture.builder().userId(loginUser.getId()).build();
+        BeanUtil.copyProperties(imageMetadata,picture);
+        picture.setTags(JSONUtil.toJsonStr(imageMetadata.getTags()));
+//        String picName = pictureResult.getPicName();
+//        if (StrUtil.isNotBlank(pictureUploadRequest.getPicName())) {
+//            picName = pictureUploadRequest.getPicName();
+//        }
+//        picture.setName(picName);
         this.fillReviewParams(picture, loginUser);
         BeanUtil.copyProperties(pictureResult, picture);
         //pictureId不为空，更新，补充id和编辑时间
@@ -318,6 +331,24 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
     }
 
 
+    /**
+     * 从 URL 下载图片，转换为字节数组
+     * @param imageUrl 图片的 URL 地址
+     * @return 图片字节数组
+     * @throws IOException 下载过程中 IO 异常
+     */
+    private byte[] downloadImageFromUrl(String imageUrl) throws IOException {
+        URL url = new URL(imageUrl);
+        URLConnection connection = url.openConnection();
+        // 可设置超时时间（可选）
+        connection.setConnectTimeout(5000);
+        connection.setReadTimeout(5000);
+
+        // 读取流并转换为字节数组
+        try (var inputStream = connection.getInputStream()) {
+            return inputStream.readAllBytes();
+        }
+    }
 }
 
 

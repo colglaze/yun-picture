@@ -50,8 +50,7 @@ public class FileManager {
      * @return
      */
     public UploadPictureResult uploadPicture(MultipartFile multipartFile, String uploadPathPrefix) {
-        //校验图片
-        validPicture(multipartFile);
+
         //图片上传地址(自己拼接防止恶意地址)
         String uuid = RandomUtil.randomString(16);
         String filename = multipartFile.getOriginalFilename();
@@ -126,8 +125,8 @@ public class FileManager {
      * @return
      */
     public UploadPictureResult uploadPictureByUrl(String fileUrl, String uploadPathPrefix) {
-        //校验图片
-        validPicture(fileUrl);
+//        //校验图片
+//        validPicture(fileUrl);
         //图片上传地址(自己拼接防止恶意地址)
         String uuid = RandomUtil.randomString(16);
         String filename = FileUtil.mainName(fileUrl);
@@ -168,7 +167,7 @@ public class FileManager {
      * 根据url校验图片
      * @param fileUrl
      */
-    private void validPicture(String fileUrl) {
+    public void validPicture(String fileUrl) {
         //校验参数是否为空
         ThrowUtils.throwIf(StrUtil.isEmpty(fileUrl),ErrorCode.PARAMS_ERROR,"文件地址不能为空");
         //校验url格式

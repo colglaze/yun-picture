@@ -1,5 +1,7 @@
 package com.colglaze.yunpicture.manager;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baidu.aip.imageclassify.AipImageClassify;
 import com.colglaze.yunpicture.exceptions.BusinessException;
@@ -12,13 +14,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.BindException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ImageMetadataService {
+public class ImageMetadataManage {
 
     private final AipImageClassify aipImageClassify;
 
@@ -26,11 +29,11 @@ public class ImageMetadataService {
      * 生成图片的元数据（名称、简介、分类、标签）
      * 使用最新的百度AI接口
      */
-    public ImageMetadata generateMetadata(MultipartFile file) throws IOException {
-        if (ObjectUtil.isEmpty(file)) {
+    public ImageMetadata generateMetadata(byte[] imageData) throws IOException {
+        if (ArrayUtil.isEmpty(imageData)) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
-        byte[] imageData = file.getBytes();
+//         = file.getBytes();
 
         // 调用通用物体和场景识别API（替代原scene方法）
         JSONObject generalResult = aipImageClassify.advancedGeneral(imageData, null);
@@ -107,5 +110,6 @@ public class ImageMetadataService {
 
         return sb.toString();
     }
+
 }
 
