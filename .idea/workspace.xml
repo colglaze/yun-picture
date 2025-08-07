@@ -4,12 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="ai识图，为图片添加基本信息初步开发">
+    <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="ai识图，为图片添加基本信息进一步步开发">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/config/AipConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/config/AipConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/FileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/FileManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/ImageMetadataService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/ImageMetadataManage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/FileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/FileController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/mapper/PictureMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/mapper/PictureMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/vo/PictureTagCategory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/vo/PictureTagCategory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/PictureService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/PictureService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/PictureServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/PictureServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/PictureMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/PictureMapper.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,7 +77,7 @@
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "database.query.execution",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -137,7 +139,7 @@
       <workItem from="1753878279723" duration="10927000" />
       <workItem from="1754097768439" duration="5085000" />
       <workItem from="1754188425730" duration="22141000" />
-      <workItem from="1754382977857" duration="20244000" />
+      <workItem from="1754382977857" duration="24982000" />
     </task>
     <task id="LOCAL-00001" summary="完成了用户的注册登录功能，实现了管理员对用户的管理以及对用户的分页查询">
       <option name="closed" value="true" />
@@ -267,7 +269,15 @@
       <option name="project" value="LOCAL" />
       <updated>1754495003728</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="ai识图，为图片添加基本信息进一步步开发">
+      <option name="closed" value="true" />
+      <created>1754532197137</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1754532197137</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -310,7 +320,8 @@
     <MESSAGE value="用户上传图片bug修复" />
     <MESSAGE value="批量上传图片以及通过url上传图片功能开发" />
     <MESSAGE value="ai识图，为图片添加基本信息初步开发" />
-    <option name="LAST_COMMIT_MESSAGE" value="ai识图，为图片添加基本信息初步开发" />
+    <MESSAGE value="ai识图，为图片添加基本信息进一步步开发" />
+    <option name="LAST_COMMIT_MESSAGE" value="ai识图，为图片添加基本信息进一步步开发" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -8,6 +8,7 @@ import com.colglaze.yunpicture.model.dto.picture.PictureUploadRequest;
 import com.colglaze.yunpicture.model.entity.Picture;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.colglaze.yunpicture.model.entity.User;
+import com.colglaze.yunpicture.model.vo.PictureTagCategory;
 import com.colglaze.yunpicture.model.vo.PictureVO;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -83,4 +84,10 @@ public interface PictureService extends IService<Picture> {
      * @return
      */
     int uploadPictureByBatch(PictureUploadByBatchRequest pictureUploadByBatchRequest, User loginUser);
+
+    /**
+     * 获取标签和分类
+     * @return
+     */
+    PictureTagCategory getCateAndTags();
 }

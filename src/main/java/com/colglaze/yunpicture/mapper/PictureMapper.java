@@ -2,6 +2,9 @@ package com.colglaze.yunpicture.mapper;
 
 import com.colglaze.yunpicture.model.entity.Picture;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.colglaze.yunpicture.model.vo.PictureTagCategory;
+
+import java.util.List;
 
 /**
 * @author ColorGlaze
@@ -11,6 +14,17 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface PictureMapper extends BaseMapper<Picture> {
 
+    /**
+     * 获取标签
+     * @return
+     */
+    List<String> getTags();
+
+    /**
+     * 获取分类
+     * @return
+     */
+    List<String> getCategory();
 }
 
 

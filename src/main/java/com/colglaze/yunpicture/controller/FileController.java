@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.colglaze.yunpicture.annotation.AuthCheck;
 import com.colglaze.yunpicture.common.BaseResponse;
@@ -265,13 +266,13 @@ public class FileController {
 
     }
 
+    /**
+     * 获取标签以及分类
+     * @return
+     */
     @GetMapping("/tag_category")
     public BaseResponse<PictureTagCategory> listPictureTagCategory() {
-        PictureTagCategory pictureTagCategory = new PictureTagCategory();
-        List<String> tagList = Arrays.asList("热门", "搞笑", "生活", "高清", "艺术", "校园", "背景", "简历", "创意", "美女");
-        List<String> categoryList = Arrays.asList("模板", "电商", "表情包", "素材", "海报", "二次元");
-        pictureTagCategory.setTagList(tagList);
-        pictureTagCategory.setCategoryList(categoryList);
+        PictureTagCategory pictureTagCategory = pictureService.getCateAndTags();
         return ResultUtils.success(pictureTagCategory);
     }
 

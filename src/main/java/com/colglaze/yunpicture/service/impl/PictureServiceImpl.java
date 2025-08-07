@@ -21,6 +21,7 @@ import com.colglaze.yunpicture.model.dto.picture.*;
 import com.colglaze.yunpicture.model.entity.Picture;
 import com.colglaze.yunpicture.model.entity.User;
 import com.colglaze.yunpicture.model.enums.PictureReviewStatusEnum;
+import com.colglaze.yunpicture.model.vo.PictureTagCategory;
 import com.colglaze.yunpicture.model.vo.PictureVO;
 import com.colglaze.yunpicture.model.vo.UserVO;
 import com.colglaze.yunpicture.service.PictureService;
@@ -59,6 +60,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
     private final FileManager fileManager;
     private final UserService userService;
     private final ImageMetadataManage imageMetadataService;
+    private final PictureMapper pictureMapper;
 
     @Override
     public PictureVO uploadPicture(MultipartFile multipartFile, PictureUploadRequest pictureUploadRequest, User loginUser) throws IOException {
@@ -328,6 +330,13 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
             }
         }
         return uploadCount;
+    }
+
+    @Override
+    public PictureTagCategory getCateAndTags() {
+        List<String> tags = pictureMapper.getTags();
+        List<String> category = pictureMapper.getCategory();
+        return new PictureTagCategory(tags,category);
     }
 
 
