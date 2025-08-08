@@ -10,6 +10,7 @@ import com.colglaze.yunpicture.annotation.AuthCheck;
 import com.colglaze.yunpicture.common.BaseResponse;
 import com.colglaze.yunpicture.common.DeleteRequest;
 import com.colglaze.yunpicture.common.ResultUtils;
+import com.colglaze.yunpicture.constant.RedisConstant;
 import com.colglaze.yunpicture.constant.UserConstant;
 import com.colglaze.yunpicture.exceptions.BusinessException;
 import com.colglaze.yunpicture.exceptions.ErrorCode;
@@ -22,6 +23,7 @@ import com.colglaze.yunpicture.model.vo.PictureTagCategory;
 import com.colglaze.yunpicture.model.vo.PictureVO;
 import com.colglaze.yunpicture.service.PictureService;
 import com.colglaze.yunpicture.service.UserService;
+import com.colglaze.yunpicture.utils.RedisUtil;
 import com.qcloud.cos.model.COSObject;
 import com.qcloud.cos.model.COSObjectInputStream;
 import com.qcloud.cos.utils.IOUtils;
@@ -30,6 +32,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,6 +61,8 @@ public class FileController {
     private final UserService userService;
 
     private final PictureService pictureService;
+
+    private final StringRedisTemplate redisTemplate;
 
     /**
      * 测试文件上传
@@ -138,6 +143,8 @@ public class FileController {
             HttpServletRequest request) throws IOException {
         User loginUser = userService.getLoginUser(request);
         PictureVO pictureVO = pictureService.uploadPicture(multipartFile, pictureUploadRequest, loginUser);
+        //刷新缓存
+        new RedisUtil(redisTemplate).refreshByIndex(RedisConstant.LIST_PICTURE_BY_PAGE_INDEX);
         return ResultUtils.success(pictureVO);
     }
 
@@ -154,6 +161,8 @@ public class FileController {
         ThrowUtils.throwIf(ObjectUtil.isEmpty(picture), ErrorCode.NOT_FOUND_ERROR);
         if (ObjectUtil.equal(picture.getUserId(), loginUser.getId()) || StrUtil.equals(loginUser.getUserRole(), UserConstant.ADMIN_ROLE)) {
             Boolean remove = pictureService.removeById(picture);
+            //刷新缓存
+            new RedisUtil(redisTemplate).refreshByIndex(RedisConstant.LIST_PICTURE_BY_PAGE_INDEX);
             return ResultUtils.success(remove);
         }
         throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
@@ -182,6 +191,8 @@ public class FileController {
         if (!update) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR);
         }
+        //刷新缓存
+        new RedisUtil(redisTemplate).refreshByIndex(RedisConstant.LIST_PICTURE_BY_PAGE_INDEX);
         return ResultUtils.success(update);
     }
 
@@ -260,6 +271,8 @@ public class FileController {
         if (StrUtil.equals(loginUser.getUserRole(), UserConstant.ADMIN_ROLE) || ObjectUtil.equal(loginUser.getId(), picture.getUserId())) {
             pictureService.fillReviewParams(picture, loginUser);
             boolean update = pictureService.updateById(picture);
+            //刷新缓存
+            new RedisUtil(redisTemplate).refreshByIndex(RedisConstant.LIST_PICTURE_BY_PAGE_INDEX);
             return ResultUtils.success(update);
         }
         throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
@@ -298,6 +311,8 @@ public class FileController {
         User loginUser = userService.getLoginUser(request);
         String fileUrl = pictureUploadRequest.getFileUrl();
         PictureVO pictureVO = pictureService.uploadPicture(fileUrl, pictureUploadRequest, loginUser);
+        //刷新缓存
+        new RedisUtil(redisTemplate).refreshByIndex(RedisConstant.LIST_PICTURE_BY_PAGE_INDEX);
         return ResultUtils.success(pictureVO);
     }
 
@@ -317,6 +332,8 @@ public class FileController {
         ThrowUtils.throwIf(pictureUploadByBatchRequest == null, ErrorCode.PARAMS_ERROR);
         User loginUser = userService.getLoginUser(request);
         int uploadCount = pictureService.uploadPictureByBatch(pictureUploadByBatchRequest, loginUser);
+        //刷新缓存
+        new RedisUtil(redisTemplate).refreshByIndex(RedisConstant.LIST_PICTURE_BY_PAGE_INDEX);
         return ResultUtils.success(uploadCount);
     }
 

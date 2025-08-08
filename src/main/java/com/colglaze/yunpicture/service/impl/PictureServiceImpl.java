@@ -1,14 +1,16 @@
 package com.colglaze.yunpicture.service.impl;
 
+
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.util.*;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+
+import com.colglaze.yunpicture.constant.RedisConstant;
 import com.colglaze.yunpicture.constant.UserConstant;
 import com.colglaze.yunpicture.exceptions.BusinessException;
 import com.colglaze.yunpicture.exceptions.ErrorCode;
@@ -29,10 +31,13 @@ import com.colglaze.yunpicture.mapper.PictureMapper;
 import com.colglaze.yunpicture.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.DigestUtils;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,6 +49,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -61,6 +67,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
     private final UserService userService;
     private final ImageMetadataManage imageMetadataService;
     private final PictureMapper pictureMapper;
+    private final StringRedisTemplate redisTemplate;
 
     @Override
     public PictureVO uploadPicture(MultipartFile multipartFile, PictureUploadRequest pictureUploadRequest, User loginUser) throws IOException {
@@ -78,7 +85,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         UploadPictureResult pictureResult = fileManager.uploadPicture(multipartFile, uploadPathPrefix);
         //构造入库信息
         Picture picture = Picture.builder().userId(loginUser.getId()).build();
-        BeanUtil.copyProperties(imageMetadata,picture);
+        BeanUtil.copyProperties(imageMetadata, picture);
         String tags = JSONUtil.toJsonStr(imageMetadata.getTags());
         picture.setTags(tags);
         this.fillReviewParams(picture, loginUser);
@@ -129,6 +136,22 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         if (isDefault) {
             queryRequest.setReviewStatus(PictureReviewStatusEnum.PASS.getValue());
         }
+        //构建缓存key
+        String queryCondition = JSONUtil.toJsonStr(queryRequest);
+        String hashKey = DigestUtils.md5Hex(queryCondition.getBytes());
+        String redisKey = RedisConstant.LIST_PICTURE_BY_PAGE + hashKey;
+        //从redis中查询
+        String cacheValue = redisTemplate.opsForValue().get(redisKey);
+        if (StrUtil.isNotEmpty(cacheValue)) {
+            //如果命中，返回结果
+            Page<Picture> cachePage = JSONUtil.toBean(
+                    cacheValue,
+                    new TypeReference<Page<Picture>>() {
+                    },  // 明确指定泛型类型
+                    true  // 忽略未知属性，避免实体类字段变化导致反序列化失败
+            );
+            return cachePage;
+        }
         //构建查询条件
         LambdaQueryWrapper<Picture> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(ObjectUtil.isNotEmpty(queryRequest.getId()), Picture::getId, queryRequest.getId())
@@ -136,7 +159,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
                 .like(StrUtil.isNotBlank(queryRequest.getName()), Picture::getName, queryRequest.getName())
                 .like(StrUtil.isNotBlank(queryRequest.getIntroduction()), Picture::getIntroduction, queryRequest.getIntroduction())
                 .like(StrUtil.isNotBlank(queryRequest.getPicFormat()), Picture::getPicFormat, queryRequest.getPicFormat())
-                .eq(StrUtil.isNotBlank(queryRequest.getCategory()), Picture::getCategory, queryRequest.getCategory())
+                .like(StrUtil.isNotBlank(queryRequest.getCategory()), Picture::getCategory, queryRequest.getCategory())
                 .eq(ObjectUtil.isNotEmpty(queryRequest.getPicWidth()), Picture::getPicWidth, queryRequest.getPicWidth())
                 .eq(ObjectUtil.isNotEmpty(queryRequest.getPicHeight()), Picture::getPicHeight, queryRequest.getPicHeight())
                 .eq(ObjectUtil.isNotEmpty(queryRequest.getPicSize()), Picture::getPicSize, queryRequest.getPicSize())
@@ -158,7 +181,14 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         //排序
         queryWrapper.orderBy(true, false, Picture::getCreateTime);
         Page<Picture> page = this.page(new Page<>(current, pageSize), queryWrapper);
-
+        //存入redis缓存
+        cacheValue = JSONUtil.toJsonStr(page);
+        //设置5-10分钟随机过期，防止缓存雪崩（大量数据同一时间过期，大量请求同时访问数据库）
+        int cacheExpireTime = 300 + RandomUtil.randomInt(0, 300);
+        redisTemplate.opsForValue().set(redisKey, cacheValue, cacheExpireTime, TimeUnit.SECONDS);
+        //将所有页面查询的hashKye加入前缀索引，方便后续刷新
+        redisTemplate.opsForSet().add(RedisConstant.LIST_PICTURE_BY_PAGE_INDEX, redisKey);
+        redisTemplate.expire(RedisConstant.LIST_PICTURE_BY_PAGE_INDEX, cacheExpireTime + 60, TimeUnit.SECONDS);
         return page;
     }
 
@@ -242,21 +272,16 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         //ai填充信息
         ImageMetadata imageMetadata = null;
         try {
-             imageMetadata = imageMetadataService.generateMetadata(downloadImageFromUrl(fileUrl));
+            imageMetadata = imageMetadataService.generateMetadata(downloadImageFromUrl(fileUrl));
         } catch (IOException e) {
-            throw new BusinessException(ErrorCode.OPERATION_ERROR,"文件传输错误");
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "文件传输错误");
         }
         UploadPictureResult pictureResult = fileManager.uploadPictureByUrl(fileUrl, uploadPathPrefix);
         //构造入库信息
         // 构造要入库的图片信息
         Picture picture = Picture.builder().userId(loginUser.getId()).build();
-        BeanUtil.copyProperties(imageMetadata,picture);
+        BeanUtil.copyProperties(imageMetadata, picture);
         picture.setTags(JSONUtil.toJsonStr(imageMetadata.getTags()));
-//        String picName = pictureResult.getPicName();
-//        if (StrUtil.isNotBlank(pictureUploadRequest.getPicName())) {
-//            picName = pictureUploadRequest.getPicName();
-//        }
-//        picture.setName(picName);
         this.fillReviewParams(picture, loginUser);
         BeanUtil.copyProperties(pictureResult, picture);
         //pictureId不为空，更新，补充id和编辑时间
@@ -314,9 +339,9 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
             }
             // 上传图片
             PictureUploadRequest pictureUploadRequest = new PictureUploadRequest();
-            if (StrUtil.isNotBlank(namePrefix)) {
-                pictureUploadRequest.setPicName(namePrefix + (uploadCount + 1));
-            }
+//            if (StrUtil.isNotBlank(namePrefix)) {
+//                pictureUploadRequest.setPicName(namePrefix + (uploadCount + 1));
+//            }
             try {
                 PictureVO pictureVO = this.uploadPicture(fileUrl, pictureUploadRequest, loginUser);
                 log.info("图片上传成功, id = {}", pictureVO.getId());
@@ -334,14 +359,26 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
 
     @Override
     public PictureTagCategory getCateAndTags() {
+        //查缓存
+        String cacheValue = redisTemplate.opsForValue().get(RedisConstant.GET_CATE_AND_TAGS);
+        //命中，返回
+        if (StrUtil.isNotEmpty(cacheValue)) {
+            PictureTagCategory tagCategory = JSONUtil.toBean(cacheValue, PictureTagCategory.class);
+            return tagCategory;
+        }
         List<String> tags = pictureMapper.getTags();
         List<String> category = pictureMapper.getCategory();
-        return new PictureTagCategory(tags,category);
+        PictureTagCategory tagCategory = new PictureTagCategory(tags, category);
+        cacheValue = JSONUtil.toJsonStr(tagCategory);
+        //写缓存
+        redisTemplate.opsForValue().set(RedisConstant.GET_CATE_AND_TAGS, cacheValue, 1, TimeUnit.DAYS);
+        return tagCategory;
     }
 
 
     /**
      * 从 URL 下载图片，转换为字节数组
+     *
      * @param imageUrl 图片的 URL 地址
      * @return 图片字节数组
      * @throws IOException 下载过程中 IO 异常

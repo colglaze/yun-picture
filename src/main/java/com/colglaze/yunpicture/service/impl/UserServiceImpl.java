@@ -106,7 +106,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         User user = (User) request.getSession().getAttribute(USER_LOGIN_STATE);
         //判断是否登录
         if (ObjectUtil.hasEmpty(user,user.getId())) {
-            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR,"请先登录");
         }
         User userById = this.getById(user.getId());
         if (ObjectUtil.isEmpty(userById)) {
