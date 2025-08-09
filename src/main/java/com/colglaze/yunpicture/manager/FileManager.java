@@ -1,5 +1,6 @@
 package com.colglaze.yunpicture.manager;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 
@@ -18,7 +19,9 @@ import com.colglaze.yunpicture.exceptions.ErrorCode;
 import com.colglaze.yunpicture.exceptions.ThrowUtils;
 import com.colglaze.yunpicture.model.dto.file.UploadPictureResult;
 import com.qcloud.cos.model.PutObjectResult;
+import com.qcloud.cos.model.ciModel.persistence.CIObject;
 import com.qcloud.cos.model.ciModel.persistence.ImageInfo;
+import com.qcloud.cos.model.ciModel.persistence.ProcessResults;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -66,6 +69,23 @@ public class FileManager {
             //上传图片
             PutObjectResult putObjectResult = cosManager.putPictureObject(uploadPath, file);
             ImageInfo imageInfo = putObjectResult.getCiUploadResult().getOriginalInfo().getImageInfo();
+            ProcessResults processResults = putObjectResult.getCiUploadResult().getProcessResults();
+            List<CIObject> objectList = processResults.getObjectList();
+            if (CollUtil.isNotEmpty(objectList)) {
+                CIObject first = CollUtil.getFirst(objectList);
+                UploadPictureResult pictureResult = UploadPictureResult
+                        .builder()
+                        .picName(FileUtil.mainName(filename))
+                        .picWidth(first.getWidth())
+                        .picHeight(first.getHeight())
+                        .picScale(NumberUtil.round(first.getWidth() * 1.0 / first.getHeight(), 2).doubleValue())
+                        .picFormat(first.getFormat())
+                        .picSize(first.getSize().longValue())
+                        .url(cosClientConfig.getHost() + "/" + first.getKey())
+                        .build();
+
+                return pictureResult;
+            }
             //封装返回结果
             UploadPictureResult pictureResult = UploadPictureResult
                     .builder()
@@ -77,7 +97,6 @@ public class FileManager {
                     .picSize(FileUtil.size(file))
                     .url(cosClientConfig.getHost() + "/" + uploadPath)
                     .build();
-
             return pictureResult;
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -142,6 +161,23 @@ public class FileManager {
             //上传图片
             PutObjectResult putObjectResult = cosManager.putPictureObject(uploadPath, file);
             ImageInfo imageInfo = putObjectResult.getCiUploadResult().getOriginalInfo().getImageInfo();
+            ProcessResults processResults = putObjectResult.getCiUploadResult().getProcessResults();
+            List<CIObject> objectList = processResults.getObjectList();
+            if (CollUtil.isNotEmpty(objectList)) {
+                CIObject first = CollUtil.getFirst(objectList);
+                UploadPictureResult pictureResult = UploadPictureResult
+                        .builder()
+                        .picName(FileUtil.mainName(filename))
+                        .picWidth(first.getWidth())
+                        .picHeight(first.getHeight())
+                        .picScale(NumberUtil.round(first.getWidth() * 1.0 / first.getHeight(), 2).doubleValue())
+                        .picFormat(first.getFormat())
+                        .picSize(first.getSize().longValue())
+                        .url(cosClientConfig.getHost() + "/" + first.getKey())
+                        .build();
+
+                return pictureResult;
+            }
             //封装返回结果
             UploadPictureResult pictureResult = UploadPictureResult
                     .builder()

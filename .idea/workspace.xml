@@ -4,16 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="优化图片的分类以及标签展示">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/constant/RedisConstant.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/utils/RedisUtil.java" afterDir="false" />
+    <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="redis优化图片列表的读取以及分类和标签的读取">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/FileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/FileController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/PictureServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/PictureServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/vo/PictureTagCategory.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/vo/PictureTagCategory.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/service/impl/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/service/impl/UserServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/CosManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/CosManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/FileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/FileManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,7 +140,7 @@
       <workItem from="1754097768439" duration="5085000" />
       <workItem from="1754188425730" duration="22141000" />
       <workItem from="1754382977857" duration="30449000" />
-      <workItem from="1754633186526" duration="10362000" />
+      <workItem from="1754633186526" duration="13950000" />
     </task>
     <task id="LOCAL-00001" summary="完成了用户的注册登录功能，实现了管理员对用户的管理以及对用户的分页查询">
       <option name="closed" value="true" />
@@ -292,7 +286,15 @@
       <option name="project" value="LOCAL" />
       <updated>1754537391272</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="redis优化图片列表的读取以及分类和标签的读取">
+      <option name="closed" value="true" />
+      <created>1754667028204</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1754667028204</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -337,7 +339,8 @@
     <MESSAGE value="ai识图，为图片添加基本信息初步开发" />
     <MESSAGE value="ai识图，为图片添加基本信息进一步步开发" />
     <MESSAGE value="优化图片的分类以及标签展示" />
-    <option name="LAST_COMMIT_MESSAGE" value="优化图片的分类以及标签展示" />
+    <MESSAGE value="redis优化图片列表的读取以及分类和标签的读取" />
+    <option name="LAST_COMMIT_MESSAGE" value="redis优化图片列表的读取以及分类和标签的读取" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
