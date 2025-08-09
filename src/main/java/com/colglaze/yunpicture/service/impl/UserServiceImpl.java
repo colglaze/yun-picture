@@ -1,22 +1,16 @@
 package com.colglaze.yunpicture.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.colglaze.yunpicture.model.dto.picture.PictureQueryRequest;
-import com.colglaze.yunpicture.model.dto.user.UserAddRequest;
-import com.colglaze.yunpicture.model.dto.user.UserLoginRequest;
-import com.colglaze.yunpicture.model.dto.user.UserQueryRequest;
+import com.colglaze.yunpicture.model.dto.user.*;
 import com.colglaze.yunpicture.model.entity.User;
 import com.colglaze.yunpicture.exceptions.BusinessException;
 import com.colglaze.yunpicture.exceptions.ErrorCode;
-import com.colglaze.yunpicture.model.dto.user.UserRegisterRequest;
 import com.colglaze.yunpicture.model.vo.LoginUserVO;
-import com.colglaze.yunpicture.model.vo.PictureVO;
 import com.colglaze.yunpicture.model.vo.UserVO;
 import com.colglaze.yunpicture.service.UserService;
 import com.colglaze.yunpicture.mapper.UserMapper;
@@ -164,6 +158,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         //返回结果
         userVOPage.setRecords(userVos);
         return userVOPage;
+    }
+
+    @Override
+    public Boolean updatePassword(PasswordRequest passwordRequest, HttpServletRequest request) {
+        User loginUser = this.getLoginUser(request);
+        String userPassword = loginUser.getUserPassword();
+        //加密
+        String checkPassword = DigestUtils.md5Hex(passwordRequest.getCheckPassword());
+        String newPassword = DigestUtils.md5Hex(passwordRequest.getNewPassword());
+        String oldPassword = DigestUtils.md5Hex(passwordRequest.getUserPassword());
+        if (StrUtil.hasBlank(newPassword,
+                checkPassword, oldPassword)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,"密码不能为空");
+        }
+        if (StrUtil.equals(oldPassword,userPassword)) {
+            if (StrUtil.equals(newPassword,checkPassword)) {
+                loginUser.setUserPassword(newPassword);
+                boolean update = this.updateById(loginUser);
+                return update;
+            }
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,"两次密码输入不一致");
+        }
+       throw new BusinessException(ErrorCode.PARAMS_ERROR,"原密码错误");
     }
 }
 

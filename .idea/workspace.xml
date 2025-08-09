@@ -4,13 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="上传图片优化，将图片压缩为webp格式">
+    <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="上传图片优化，将图片压缩为缩略图，超过1.5mb的将转换为缩略图展示在主页">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/space/SpaceAddRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/space/SpaceEditRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/space/SpaceQueryRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/space/SpaceUpdateRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/user/PasswordRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/enums/SpaceLevelEnum.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/vo/SpaceVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/mybatisx/templates.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/mybatisx/templates.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/CosManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/CosManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/FileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/FileManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/file/UploadPictureResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/file/UploadPictureResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/vo/PictureVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/vo/PictureVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/controller/UserController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/service/impl/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/service/impl/UserServiceImpl.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -143,7 +151,7 @@
       <workItem from="1754097768439" duration="5085000" />
       <workItem from="1754188425730" duration="22141000" />
       <workItem from="1754382977857" duration="30449000" />
-      <workItem from="1754633186526" duration="18610000" />
+      <workItem from="1754633186526" duration="24472000" />
     </task>
     <task id="LOCAL-00001" summary="完成了用户的注册登录功能，实现了管理员对用户的管理以及对用户的分页查询">
       <option name="closed" value="true" />
@@ -305,7 +313,15 @@
       <option name="project" value="LOCAL" />
       <updated>1754707744714</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="上传图片优化，将图片压缩为缩略图，超过1.5mb的将转换为缩略图展示在主页">
+      <option name="closed" value="true" />
+      <created>1754725010846</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1754725010846</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -352,7 +368,8 @@
     <MESSAGE value="优化图片的分类以及标签展示" />
     <MESSAGE value="redis优化图片列表的读取以及分类和标签的读取" />
     <MESSAGE value="上传图片优化，将图片压缩为webp格式" />
-    <option name="LAST_COMMIT_MESSAGE" value="上传图片优化，将图片压缩为webp格式" />
+    <MESSAGE value="上传图片优化，将图片压缩为缩略图，超过1.5mb的将转换为缩略图展示在主页" />
+    <option name="LAST_COMMIT_MESSAGE" value="上传图片优化，将图片压缩为缩略图，超过1.5mb的将转换为缩略图展示在主页" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

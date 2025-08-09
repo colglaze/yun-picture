@@ -1,15 +1,10 @@
 package com.colglaze.yunpicture.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.colglaze.yunpicture.model.dto.picture.PictureQueryRequest;
-import com.colglaze.yunpicture.model.dto.user.UserAddRequest;
-import com.colglaze.yunpicture.model.dto.user.UserLoginRequest;
-import com.colglaze.yunpicture.model.dto.user.UserQueryRequest;
+import com.colglaze.yunpicture.model.dto.user.*;
 import com.colglaze.yunpicture.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.colglaze.yunpicture.model.dto.user.UserRegisterRequest;
 import com.colglaze.yunpicture.model.vo.LoginUserVO;
-import com.colglaze.yunpicture.model.vo.PictureVO;
 import com.colglaze.yunpicture.model.vo.UserVO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -66,4 +61,12 @@ public interface UserService extends IService<User> {
     Page<UserVO> listUserVoByPage(UserQueryRequest userQueryRequest);
 
 
+    /**
+     * 更改用户密码
+     *
+     * @param passwordRequest
+     * @param request
+     * @return
+     */
+    Boolean updatePassword(PasswordRequest passwordRequest, HttpServletRequest request);
 }

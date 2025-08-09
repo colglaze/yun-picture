@@ -144,4 +144,11 @@ public class UserController {
         Page<UserVO> userVOPage = userService.listUserVoByPage(userQueryRequest);
         return ResultUtils.success(userVOPage);
     }
+
+    @PostMapping("/get/vo/password")
+    @ApiOperation("修改用户密码")
+    public BaseResponse<Boolean> updatePassword(@RequestBody PasswordRequest passwordRequest, HttpServletRequest request){
+        Boolean isOk = userService.updatePassword(passwordRequest, request);
+        return ResultUtils.success(isOk);
+    }
 }
