@@ -73,6 +73,10 @@ public class FileManager {
             List<CIObject> objectList = processResults.getObjectList();
             if (CollUtil.isNotEmpty(objectList)) {
                 CIObject first = CollUtil.getFirst(objectList);
+                CIObject thumbnail = first;
+                if (objectList.size() > 1) {
+                    thumbnail = objectList.get(1);
+                }
                 UploadPictureResult pictureResult = UploadPictureResult
                         .builder()
                         .picName(FileUtil.mainName(filename))
@@ -82,6 +86,7 @@ public class FileManager {
                         .picFormat(first.getFormat())
                         .picSize(first.getSize().longValue())
                         .url(cosClientConfig.getHost() + "/" + first.getKey())
+                        .thumbnailUrl(cosClientConfig.getHost() + "/" + thumbnail.getKey())
                         .build();
 
                 return pictureResult;
@@ -165,6 +170,10 @@ public class FileManager {
             List<CIObject> objectList = processResults.getObjectList();
             if (CollUtil.isNotEmpty(objectList)) {
                 CIObject first = CollUtil.getFirst(objectList);
+                CIObject thumbnail = first;
+                if (objectList.size() > 1) {
+                    thumbnail = objectList.get(1);
+                }
                 UploadPictureResult pictureResult = UploadPictureResult
                         .builder()
                         .picName(FileUtil.mainName(filename))
@@ -174,6 +183,7 @@ public class FileManager {
                         .picFormat(first.getFormat())
                         .picSize(first.getSize().longValue())
                         .url(cosClientConfig.getHost() + "/" + first.getKey())
+                        .thumbnailUrl(cosClientConfig.getHost() + "/" + thumbnail.getKey())
                         .build();
 
                 return pictureResult;
