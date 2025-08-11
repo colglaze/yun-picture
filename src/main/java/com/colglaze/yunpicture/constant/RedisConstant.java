@@ -13,4 +13,13 @@ public interface RedisConstant {
     //获取标签分类的key
     String GET_CATE_AND_TAGS = "yunPicture:getCateAndTags";
 
+    //单条图片数据缓存键前缀
+    String PICTURE_SINGLE_KEY = "picture:single:";
+    //图片数据全局版本号键
+    String PICTURE_VERSION_KEY = "picture:version";
+    // 按空间维度的版本号前缀
+    String PICTURE_VERSION_SPACE_PREFIX = "picture:version:space:";
+    // 按用户维度的版本号前缀（备用，如需要按用户页面失效）
+    String PICTURE_VERSION_USER_PREFIX = "picture:version:user:";
+
 }

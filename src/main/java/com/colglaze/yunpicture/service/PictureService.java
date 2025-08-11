@@ -1,10 +1,9 @@
 package com.colglaze.yunpicture.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.colglaze.yunpicture.model.dto.picture.PictureQueryRequest;
-import com.colglaze.yunpicture.model.dto.picture.PictureReviewRequest;
-import com.colglaze.yunpicture.model.dto.picture.PictureUploadByBatchRequest;
-import com.colglaze.yunpicture.model.dto.picture.PictureUploadRequest;
+import com.colglaze.yunpicture.common.BaseResponse;
+import com.colglaze.yunpicture.common.DeleteRequest;
+import com.colglaze.yunpicture.model.dto.picture.*;
 import com.colglaze.yunpicture.model.entity.Picture;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.colglaze.yunpicture.model.entity.User;
@@ -90,4 +89,44 @@ public interface PictureService extends IService<Picture> {
      * @return
      */
     PictureTagCategory getCateAndTags();
+
+    /**
+     * 删除图片
+     * @param deleteRequest
+     * @param request
+     * @return
+     */
+    BaseResponse<Boolean> deletePicture(DeleteRequest deleteRequest, HttpServletRequest request);
+
+    /**
+     * 校验权限
+     * @param loginUser
+     * @param picture
+     */
+    void checkPictureAuth(User loginUser, Picture picture);
+
+    /**
+     * 更新图片
+     * @param pictureUpdateRequest
+     * @param request
+     * @return
+     */
+    BaseResponse<Boolean> updatePicture(PictureUpdateRequest pictureUpdateRequest, HttpServletRequest request);
+
+    /**
+     * 编辑图片
+     * @param pictureEditRequest
+     * @param request
+     * @return
+     */
+    BaseResponse<Boolean> editPicture(PictureEditRequest pictureEditRequest, HttpServletRequest request);
+
+    /**
+     * 根据id获取图片详情
+     * @param id
+     * @param request
+     * @return
+     */
+    Picture getPictureById(long id, HttpServletRequest request);
+
 }

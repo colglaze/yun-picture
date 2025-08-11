@@ -23,6 +23,7 @@ import com.colglaze.yunpicture.model.vo.PictureTagCategory;
 import com.colglaze.yunpicture.model.vo.PictureVO;
 import com.colglaze.yunpicture.service.PictureService;
 import com.colglaze.yunpicture.service.UserService;
+import com.colglaze.yunpicture.utils.CaffeineUtil;
 import com.colglaze.yunpicture.utils.RedisUtil;
 import com.qcloud.cos.model.COSObject;
 import com.qcloud.cos.model.COSObjectInputStream;
@@ -44,6 +45,9 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import static com.colglaze.yunpicture.constant.RedisConstant.PICTURE_VERSION_KEY;
+import static com.colglaze.yunpicture.constant.RedisConstant.PICTURE_VERSION_SPACE_PREFIX;
 
 /*
 @author ColGlaze
@@ -143,8 +147,7 @@ public class FileController {
             HttpServletRequest request) throws IOException {
         User loginUser = userService.getLoginUser(request);
         PictureVO pictureVO = pictureService.uploadPicture(multipartFile, pictureUploadRequest, loginUser);
-        //刷新缓存
-        new RedisUtil(redisTemplate).refreshByIndex(RedisConstant.LIST_PICTURE_BY_PAGE_INDEX);
+        // 由服务层递增更细粒度版本，无需在 Controller 重复递增
         return ResultUtils.success(pictureVO);
     }
 
@@ -154,18 +157,7 @@ public class FileController {
     @PostMapping("/delete")
     @ApiOperation("删除图片")
     public BaseResponse<Boolean> deletePicture(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
-        //只有管理员和本人才可以删除照片
-        User loginUser = userService.getLoginUser(request);
-        ThrowUtils.throwIf(ObjectUtil.hasEmpty(deleteRequest, loginUser), ErrorCode.PARAMS_ERROR, "用户未登录或参数为空");
-        Picture picture = pictureService.getById(deleteRequest.getId());
-        ThrowUtils.throwIf(ObjectUtil.isEmpty(picture), ErrorCode.NOT_FOUND_ERROR);
-        if (ObjectUtil.equal(picture.getUserId(), loginUser.getId()) || StrUtil.equals(loginUser.getUserRole(), UserConstant.ADMIN_ROLE)) {
-            Boolean remove = pictureService.removeById(picture);
-            //刷新缓存
-            new RedisUtil(redisTemplate).refreshByIndex(RedisConstant.LIST_PICTURE_BY_PAGE_INDEX);
-            return ResultUtils.success(remove);
-        }
-        throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+        return pictureService.deletePicture(deleteRequest, request);
     }
 
     /**
@@ -175,25 +167,7 @@ public class FileController {
     @ApiOperation("更新图片")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updatePicture(@RequestBody PictureUpdateRequest pictureUpdateRequest, HttpServletRequest request) {
-        ThrowUtils.throwIf(ObjectUtil.isEmpty(pictureUpdateRequest), ErrorCode.PARAMS_ERROR);
-        Picture picture = new Picture();
-        BeanUtil.copyProperties(pictureUpdateRequest, picture);
-        String tags = JSONUtil.toJsonStr(pictureUpdateRequest.getTags());
-        picture.setTags(tags);
-        //判断是否存在
-        if (ObjectUtil.isEmpty(pictureService.getById(picture.getId()))) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "图片不存在");
-        }
-        //校验图片信息
-        pictureService.validPicture(picture);
-        pictureService.fillReviewParams(picture, userService.getLoginUser(request));
-        boolean update = pictureService.updateById(picture);
-        if (!update) {
-            throw new BusinessException(ErrorCode.OPERATION_ERROR);
-        }
-        //刷新缓存
-        new RedisUtil(redisTemplate).refreshByIndex(RedisConstant.LIST_PICTURE_BY_PAGE_INDEX);
-        return ResultUtils.success(update);
+        return pictureService.updatePicture(pictureUpdateRequest, request);
     }
 
     /**
@@ -203,12 +177,7 @@ public class FileController {
     @ApiOperation("根据id获取图片")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Picture> getPictureById(long id, HttpServletRequest request) {
-        if (ObjectUtil.isEmpty(id)) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        Picture picture = pictureService.getById(id);
-        ThrowUtils.throwIf(ObjectUtil.isEmpty(picture), ErrorCode.NOT_FOUND_ERROR);
-        return ResultUtils.success(picture);
+        return ResultUtils.success(pictureService.getPictureById(id, request));
     }
 
     /**
@@ -217,11 +186,7 @@ public class FileController {
     @GetMapping("/get/vo")
     @ApiOperation("根据id获取图片vo")
     public BaseResponse<PictureVO> getPictureVOById(long id, HttpServletRequest request) {
-        if (ObjectUtil.isEmpty(id)) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        Picture picture = pictureService.getById(id);
-        ThrowUtils.throwIf(ObjectUtil.isEmpty(picture), ErrorCode.NOT_FOUND_ERROR);
+        Picture picture = pictureService.getPictureById(id, request);
         PictureVO pictureVO = PictureVO.objToVo(picture);
         return ResultUtils.success(pictureVO);
     }
@@ -254,29 +219,7 @@ public class FileController {
     @PostMapping("/edit")
     @ApiOperation("编辑图片")
     public BaseResponse<Boolean> editPicture(@RequestBody PictureEditRequest pictureEditRequest, HttpServletRequest request) {
-        if (ObjectUtil.isEmpty(pictureEditRequest) || pictureEditRequest.getId() <= 0) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        //指定修改类
-        Picture picture = new Picture();
-        BeanUtil.copyProperties(pictureEditRequest, picture);
-        picture.setTags(JSONUtil.toJsonStr(pictureEditRequest.getTags()));
-        picture.setEditTime(LocalDateTime.now());
-        //图片校验
-        pictureService.validPicture(picture);
-        ThrowUtils.throwIf(ObjectUtil.isEmpty(pictureService.getById(picture.getId())), ErrorCode.NOT_FOUND_ERROR);
-        picture.setUserId(pictureService.getById(picture.getId()).getUserId());
-        //编辑
-        User loginUser = userService.getLoginUser(request);
-        if (StrUtil.equals(loginUser.getUserRole(), UserConstant.ADMIN_ROLE) || ObjectUtil.equal(loginUser.getId(), picture.getUserId())) {
-            pictureService.fillReviewParams(picture, loginUser);
-            boolean update = pictureService.updateById(picture);
-            //刷新缓存
-            new RedisUtil(redisTemplate).refreshByIndex(RedisConstant.LIST_PICTURE_BY_PAGE_INDEX);
-            return ResultUtils.success(update);
-        }
-        throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
-
+        return pictureService.editPicture(pictureEditRequest, request);
     }
 
     /**
@@ -311,8 +254,7 @@ public class FileController {
         User loginUser = userService.getLoginUser(request);
         String fileUrl = pictureUploadRequest.getFileUrl();
         PictureVO pictureVO = pictureService.uploadPicture(fileUrl, pictureUploadRequest, loginUser);
-        //刷新缓存
-        new RedisUtil(redisTemplate).refreshByIndex(RedisConstant.LIST_PICTURE_BY_PAGE_INDEX);
+        // 由服务层递增更细粒度版本，无需在 Controller 重复递增
         return ResultUtils.success(pictureVO);
     }
 
@@ -332,8 +274,7 @@ public class FileController {
         ThrowUtils.throwIf(pictureUploadByBatchRequest == null, ErrorCode.PARAMS_ERROR);
         User loginUser = userService.getLoginUser(request);
         int uploadCount = pictureService.uploadPictureByBatch(pictureUploadByBatchRequest, loginUser);
-        //刷新缓存
-        new RedisUtil(redisTemplate).refreshByIndex(RedisConstant.LIST_PICTURE_BY_PAGE_INDEX);
+        // 由服务层递增更细粒度版本，无需在 Controller 重复递增
         return ResultUtils.success(uploadCount);
     }
 

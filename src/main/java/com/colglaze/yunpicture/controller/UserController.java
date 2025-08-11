@@ -11,10 +11,12 @@ import com.colglaze.yunpicture.common.ResultUtils;
 import com.colglaze.yunpicture.exceptions.BusinessException;
 import com.colglaze.yunpicture.exceptions.ErrorCode;
 import com.colglaze.yunpicture.exceptions.ThrowUtils;
+import com.colglaze.yunpicture.model.dto.space.SpaceAddRequest;
 import com.colglaze.yunpicture.model.dto.user.*;
 import com.colglaze.yunpicture.model.entity.User;
 import com.colglaze.yunpicture.model.vo.LoginUserVO;
 import com.colglaze.yunpicture.model.vo.UserVO;
+import com.colglaze.yunpicture.service.SpaceService;
 import com.colglaze.yunpicture.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,6 +40,7 @@ import static com.colglaze.yunpicture.constant.UserConstant.ADMIN_ROLE;
 public class UserController {
 
     private final UserService userService;
+    private final SpaceService spaceService;
 
     @ApiOperation("用户注册")
     @PostMapping("/register")
@@ -47,6 +50,7 @@ public class UserController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         Long result = userService.userRegister(registerRequest);
+        spaceService.createSpace(new SpaceAddRequest(), result);
         return ResultUtils.success(result);
     }
 
