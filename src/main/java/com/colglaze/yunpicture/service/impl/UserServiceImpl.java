@@ -6,14 +6,17 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.colglaze.yunpicture.model.dto.space.SpaceAddRequest;
 import com.colglaze.yunpicture.model.dto.user.*;
 import com.colglaze.yunpicture.model.entity.User;
 import com.colglaze.yunpicture.exceptions.BusinessException;
 import com.colglaze.yunpicture.exceptions.ErrorCode;
 import com.colglaze.yunpicture.model.vo.LoginUserVO;
 import com.colglaze.yunpicture.model.vo.UserVO;
+import com.colglaze.yunpicture.service.SpaceService;
 import com.colglaze.yunpicture.service.UserService;
 import com.colglaze.yunpicture.mapper.UserMapper;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +33,11 @@ import static com.colglaze.yunpicture.constant.UserConstant.USER_LOGIN_STATE;
  * @createDate 2025-07-23 10:58:01
  */
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         implements UserService {
+
+    private final SpaceService spaceService;
 
     @Override
     public Long userRegister(UserRegisterRequest registerRequest) {
@@ -69,8 +75,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                 .build();
         boolean save = this.save(user);
         if (!save) {
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"用户保存失败");
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"用户注册失败");
         }
+        //用户创建成功之后自动创建私人空间
+        spaceService.createSpace(new SpaceAddRequest(), user.getId());
         return user.getId();
     }
 

@@ -18,10 +18,12 @@ public interface SpaceService extends IService<Space> {
 
     /**
      * 创造空间
+     *
      * @param spaceAddRequest
+     * @param userId
      * @return
      */
-    Boolean createSpace(SpaceAddRequest spaceAddRequest);
+    Long createSpace(SpaceAddRequest spaceAddRequest, Long userId);
 
     /**
      * 删除空间

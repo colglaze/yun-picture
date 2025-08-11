@@ -20,8 +20,12 @@ import com.colglaze.yunpicture.mapper.SpaceMapper;
 import com.colglaze.yunpicture.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -35,15 +39,46 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space>
     implements SpaceService{
 
     private final UserService userService;
+    private final TransactionTemplate transactionTemplate;
 
+    Map<Long, Object> lockMap = new ConcurrentHashMap<>();
     @Override
-    public Boolean createSpace(SpaceAddRequest spaceAddRequest) {
+    public Long createSpace(SpaceAddRequest spaceAddRequest, Long userId) {
         Space space = new Space();
-        BeanUtil.copyProperties(spaceAddRequest,space);
-        validSpace(space,true);
+        BeanUtil.copyProperties(spaceAddRequest,space,true);
+        if (StrUtil.isBlank(spaceAddRequest.getSpaceName())) {
+            space.setSpaceName("默认空间");
+        }
+        if (ObjectUtil.isEmpty(spaceAddRequest.getSpaceLevel())) {
+            space.setSpaceLevel(SpaceLevelEnum.COMMON.getValue());
+        }
         fillSpaceBySpaceLevel(space);
-        boolean save = this.save(space);
-        return save;
+        validSpace(space,true);
+        space.setUserId(userId);
+        //加锁，保证每个用户只能创建一个空间
+//        String lock = String.valueOf(userId).intern();
+        //改进，使用currentHasMap将数据释放
+        Object lock = lockMap.computeIfAbsent(userId, key -> new Object());
+        synchronized (lock) {
+            try {
+                //使用编程式事务，保证事务边界性，即锁在事务之外，也可将事务方法单独声明，再使用声明式事务
+                transactionTemplate.execute(status -> {
+                    //判断之前是否已经创建过空间
+                    Space exists = lambdaQuery().eq(Space::getUserId, userId).one();
+                    if (ObjectUtil.isEmpty(exists)) {
+                        boolean save = this.save(space);
+                        ThrowUtils.throwIf(!save,ErrorCode.OPERATION_ERROR);
+                        return space.getId();
+                    }
+                    throw new BusinessException(ErrorCode.OPERATION_ERROR, "一个用户只能创建一个空间");
+                });
+            }finally {
+                //防止内存泄露
+                lockMap.remove(userId);
+            }
+
+        }
+        return Optional.ofNullable(space.getId()).orElse(-1L);
     }
 
 

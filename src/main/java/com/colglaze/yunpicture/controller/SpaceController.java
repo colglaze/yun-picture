@@ -9,6 +9,7 @@ import com.colglaze.yunpicture.model.dto.space.SpaceEditRequest;
 import com.colglaze.yunpicture.model.dto.space.SpaceQueryRequest;
 import com.colglaze.yunpicture.model.dto.space.SpaceUpdateRequest;
 import com.colglaze.yunpicture.service.SpaceService;
+import com.colglaze.yunpicture.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -29,11 +30,13 @@ import javax.servlet.http.HttpServletRequest;
 public class SpaceController {
 
     private final SpaceService spaceService;
+    private final UserService userService;
 
     @ApiOperation("创造空间")
     @PostMapping("/create")
-    public BaseResponse<Boolean> createSpace(@RequestBody SpaceAddRequest spaceAddRequest) {
-        return ResultUtils.success(spaceService.createSpace(spaceAddRequest));
+    public BaseResponse<Long> createSpace(@RequestBody SpaceAddRequest spaceAddRequest, HttpServletRequest request) {
+        Long userId = userService.getLoginUser(request).getId();
+        return ResultUtils.success(spaceService.createSpace(spaceAddRequest, userId));
     }
 
     @ApiOperation("删除空间")
