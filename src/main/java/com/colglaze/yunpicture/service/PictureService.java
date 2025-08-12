@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Map;
 
 /**
 * @author ColorGlaze
@@ -128,5 +129,13 @@ public interface PictureService extends IService<Picture> {
      * @return
      */
     Picture getPictureById(long id, HttpServletRequest request);
+
+    /**
+     * 获取当前版本号（调试用）
+     * @param userId
+     * @param spaceId
+     * @return
+     */
+    Map<String, Long> getCurrentVersions(Long userId, Long spaceId);
 
 }

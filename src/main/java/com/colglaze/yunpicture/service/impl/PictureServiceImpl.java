@@ -48,6 +48,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,11 +57,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -68,6 +65,7 @@ import static com.colglaze.yunpicture.constant.RedisConstant.PICTURE_SINGLE_KEY;
 import static com.colglaze.yunpicture.constant.RedisConstant.PICTURE_VERSION_KEY;
 import static com.colglaze.yunpicture.constant.RedisConstant.PICTURE_VERSION_USER_PREFIX;
 import static com.colglaze.yunpicture.constant.RedisConstant.PICTURE_VERSION_SPACE_PREFIX;
+import static com.colglaze.yunpicture.constant.UserConstant.USER_LOGIN_STATE;
 import static com.colglaze.yunpicture.utils.CaffeineUtil.LOCAL_CACHE;
 
 /**
@@ -87,6 +85,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
     private final PictureMapper pictureMapper;
     private final StringRedisTemplate redisTemplate;
     private final SpaceService spaceService;
+    private final TransactionTemplate transactionTemplate;
 
 
     @Override
@@ -97,7 +96,8 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         ImageMetadata imageMetadata = imageMetadataService.generateMetadata(multipartFile.getBytes());
         UploadPictureResult pictureResult = fileManager.uploadPicture(multipartFile, uploadPathPrefix);
         //构造入库信息
-        Picture picture = Picture.builder().userId(loginUser.getId()).build();
+        Long spaceId = ObjectUtil.isNotEmpty(pictureUploadRequest.getSpaceId()) ? pictureUploadRequest.getSpaceId() : -1L;
+        Picture picture = Picture.builder().userId(loginUser.getId()).spaceId(spaceId).build();
         BeanUtil.copyProperties(imageMetadata, picture);
         String tags = JSONUtil.toJsonStr(imageMetadata.getTags());
         picture.setTags(tags);
@@ -142,11 +142,14 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         Long userIdForVersion = queryRequest.getUserId();
         long version;
         if (spaceIdForVersion != null) {
-            version = defaultZero(redisTemplate.opsForValue().increment(PICTURE_VERSION_SPACE_PREFIX + spaceIdForVersion, 0));
+            String versionStr = redisTemplate.opsForValue().get(PICTURE_VERSION_SPACE_PREFIX + spaceIdForVersion);
+            version = defaultZero(StrUtil.isNotEmpty(versionStr) ? Long.valueOf(versionStr) : null);
         } else if (userIdForVersion != null) {
-            version = defaultZero(redisTemplate.opsForValue().increment(PICTURE_VERSION_USER_PREFIX + userIdForVersion, 0));
+            String versionStr = redisTemplate.opsForValue().get(PICTURE_VERSION_USER_PREFIX + userIdForVersion);
+            version = defaultZero(StrUtil.isNotEmpty(versionStr) ? Long.valueOf(versionStr) : null);
         } else {
-            version = defaultZero(redisTemplate.opsForValue().increment(PICTURE_VERSION_KEY, 0));
+            String versionStr = redisTemplate.opsForValue().get(PICTURE_VERSION_KEY);
+            version = defaultZero(StrUtil.isNotEmpty(versionStr) ? Long.valueOf(versionStr) : null);
         }
         String pageCacheKey = RedisConstant.LIST_PICTURE_BY_PAGE_INDEX + hashKey + ":v" + version;
 
@@ -363,7 +366,6 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         LambdaQueryWrapper<Picture> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(ObjectUtil.isNotEmpty(queryRequest.getId()), Picture::getId, queryRequest.getId())
                 .eq(ObjectUtil.isNotEmpty(queryRequest.getUserId()), Picture::getUserId, queryRequest.getUserId())
-                .eq(ObjectUtil.isNotEmpty(queryRequest.getSpaceId()), Picture::getSpaceId, queryRequest.getSpaceId())
                 .like(StrUtil.isNotBlank(queryRequest.getName()), Picture::getName, queryRequest.getName())
                 .like(StrUtil.isNotBlank(queryRequest.getIntroduction()), Picture::getIntroduction, queryRequest.getIntroduction())
                 .like(StrUtil.isNotBlank(queryRequest.getPicFormat()), Picture::getPicFormat, queryRequest.getPicFormat())
@@ -381,6 +383,11 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
             for (String tag : queryRequest.getTags()) {
                 queryWrapper.like(Picture::getTags, tag);
             }
+        }
+        if (ObjectUtil.isNotEmpty(queryRequest.getSpaceId())) {
+            queryWrapper.eq(Picture::getSpaceId,queryRequest.getSpaceId());
+        } else {
+            queryWrapper.eq(Picture::getSpaceId, -1L);
         }
         queryWrapper.orderByDesc(Picture::getCreateTime);
         return queryWrapper;
@@ -407,6 +414,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         //构建映射关系
         List<PictureVO> voList = records.stream().map(PictureVO::objToVo).collect(Collectors.toList());
         Set<Long> userIds = voList.stream().map(PictureVO::getUserId).collect(Collectors.toSet());
+
         Map<Long, User> userMap = userService.listByIds(userIds).stream().collect(Collectors.toMap(User::getId, user -> user));
         for (PictureVO pictureVO : voList) {
             UserVO userVO = new UserVO();
@@ -468,7 +476,8 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         UploadPictureResult pictureResult = fileManager.uploadPictureByUrl(fileUrl, uploadPathPrefix);
         //构造入库信息
         // 构造要入库的图片信息
-        Picture picture = Picture.builder().userId(loginUser.getId()).build();
+        Long spaceId = ObjectUtil.isNotEmpty(pictureUploadRequest.getSpaceId()) ? pictureUploadRequest.getSpaceId() : -1L;
+        Picture picture = Picture.builder().userId(loginUser.getId()).spaceId(spaceId).build();
         BeanUtil.copyProperties(imageMetadata, picture);
         picture.setTags(JSONUtil.toJsonStr(imageMetadata.getTags()));
         return getPictureVO(pictureUploadRequest, loginUser, picture, pictureResult);
@@ -558,12 +567,29 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         Picture picture = this.getById(deleteRequest.getId());
         ThrowUtils.throwIf(ObjectUtil.isEmpty(picture), ErrorCode.NOT_FOUND_ERROR);
         checkPictureAuth(loginUser, picture);
-        Boolean remove = this.removeById(picture);
+        // 开启事务
+        transactionTemplate.execute(status -> {
+            // 操作数据库
+            boolean result = this.removeById(picture);
+            ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+            // 释放额度
+            Long spaceId = picture.getSpaceId();
+            if (spaceId != null) {
+                boolean update = spaceService.lambdaUpdate()
+                        .eq(Space::getId, spaceId)
+                        .setSql("totalSize = totalSize - " + picture.getPicSize())
+                        .setSql("totalCount = totalCount - 1")
+                        .update();
+                ThrowUtils.throwIf(!update, ErrorCode.OPERATION_ERROR, "额度更新失败");
+            }
+            return true;
+        });
+
         // 单条缓存剔除
         evictSingle(picture.getId());
         // 刷新版本：全局 + 用户/空间维度
         incrementVersion(loginUser.getId(), picture.getSpaceId());
-        return ResultUtils.success(remove);
+        return ResultUtils.success(true);
     }
 
 
@@ -584,8 +610,21 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         }
         //否则直接入库
         picture.setSpaceId(pictureUploadRequest.getSpaceId());
-        boolean update = this.saveOrUpdate(picture);
-        ThrowUtils.throwIf(!update, ErrorCode.OPERATION_ERROR, "图片上传失败");
+        // 开启事务
+        Long finalSpaceId = pictureUploadRequest.getSpaceId();
+        transactionTemplate.execute(status -> {
+            boolean result = this.saveOrUpdate(picture);
+            ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR, "图片上传失败");
+            if (finalSpaceId != null) {
+                boolean update = spaceService.lambdaUpdate()
+                        .eq(Space::getId, finalSpaceId)
+                        .setSql("totalSize = totalSize + " + picture.getPicSize())
+                        .setSql("totalCount = totalCount + 1")
+                        .update();
+                ThrowUtils.throwIf(!update, ErrorCode.OPERATION_ERROR, "额度更新失败");
+            }
+            return picture;
+        });
         // 写入单条缓存，便于后续详情/拼装命中
         cacheSingle(picture);
         // 刷新版本：全局 + 用户/空间维度
@@ -601,7 +640,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
 
         //校验用户是否登录
         ThrowUtils.throwIf(ObjectUtil.isEmpty(loginUser), ErrorCode.NOT_LOGIN_ERROR);
-        // 校验空间是否存在
+        // 空间权限校验
         Long spaceId = pictureUploadRequest.getSpaceId();
         if (spaceId != null) {
             Space space = spaceService.getById(spaceId);
@@ -610,7 +649,15 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
             if (!loginUser.getId().equals(space.getUserId())) {
                 throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "没有空间权限");
             }
+            // 校验额度
+            if (space.getTotalCount() >= space.getMaxCount()) {
+                throw new BusinessException(ErrorCode.OPERATION_ERROR, "空间条数不足");
+            }
+            if (space.getTotalSize() >= space.getMaxSize()) {
+                throw new BusinessException(ErrorCode.OPERATION_ERROR, "空间大小不足");
+            }
         }
+
         Long pictureId = pictureUploadRequest.getId();
         // 如果是更新图片，需要校验图片是否存在
         if (pictureId != null) {
@@ -810,6 +857,27 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         }
         ThrowUtils.throwIf(ObjectUtil.isEmpty(picture), ErrorCode.NOT_FOUND_ERROR);
         return picture;
+    }
+
+    /**
+     * 获取当前版本号（调试用）
+     */
+    public Map<String, Long> getCurrentVersions(Long userId, Long spaceId) {
+        Map<String, Long> versions = new HashMap<>();
+        String globalVersionStr = redisTemplate.opsForValue().get(PICTURE_VERSION_KEY);
+        versions.put("global", defaultZero(StrUtil.isNotEmpty(globalVersionStr) ? Long.valueOf(globalVersionStr) : null));
+        
+        if (userId != null) {
+            String userVersionStr = redisTemplate.opsForValue().get(PICTURE_VERSION_USER_PREFIX + userId);
+            versions.put("user_" + userId, defaultZero(StrUtil.isNotEmpty(userVersionStr) ? Long.valueOf(userVersionStr) : null));
+        }
+        
+        if (spaceId != null) {
+            String spaceVersionStr = redisTemplate.opsForValue().get(PICTURE_VERSION_SPACE_PREFIX + spaceId);
+            versions.put("space_" + spaceId, defaultZero(StrUtil.isNotEmpty(spaceVersionStr) ? Long.valueOf(spaceVersionStr) : null));
+        }
+        
+        return versions;
     }
 
 }

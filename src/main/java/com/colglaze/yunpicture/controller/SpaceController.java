@@ -1,13 +1,23 @@
 package com.colglaze.yunpicture.controller;
 
+import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.colglaze.yunpicture.annotation.AuthCheck;
 import com.colglaze.yunpicture.common.BaseResponse;
 import com.colglaze.yunpicture.common.ResultUtils;
 import com.colglaze.yunpicture.constant.UserConstant;
+import com.colglaze.yunpicture.exceptions.BusinessException;
+import com.colglaze.yunpicture.exceptions.ErrorCode;
 import com.colglaze.yunpicture.model.dto.space.SpaceAddRequest;
 import com.colglaze.yunpicture.model.dto.space.SpaceEditRequest;
 import com.colglaze.yunpicture.model.dto.space.SpaceQueryRequest;
 import com.colglaze.yunpicture.model.dto.space.SpaceUpdateRequest;
+import com.colglaze.yunpicture.model.dto.user.UserQueryRequest;
+import com.colglaze.yunpicture.model.entity.Space;
+import com.colglaze.yunpicture.model.enums.SpaceLevelEnum;
+import com.colglaze.yunpicture.model.vo.SpaceLevel;
+import com.colglaze.yunpicture.model.vo.SpaceVO;
+import com.colglaze.yunpicture.model.vo.UserVO;
 import com.colglaze.yunpicture.service.SpaceService;
 import com.colglaze.yunpicture.service.UserService;
 import io.swagger.annotations.Api;
@@ -17,6 +27,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.colglaze.yunpicture.constant.UserConstant.ADMIN_ROLE;
 
 /*
 @author ColGlaze
@@ -57,4 +72,39 @@ public class SpaceController {
     public BaseResponse<Boolean> editSpace(@RequestBody SpaceEditRequest editRequest, HttpServletRequest request) {
         return ResultUtils.success(spaceService.editSpace(editRequest, request));
     }
+
+    @GetMapping("/list/level")
+    @ApiOperation("获取所有空间级别")
+    public BaseResponse<List<SpaceLevel>> listSpaceLevel() {
+        List<SpaceLevel> spaceLevelList = Arrays.stream(SpaceLevelEnum.values()) // 获取所有枚举
+                .map(spaceLevelEnum -> new SpaceLevel(
+                        spaceLevelEnum.getValue(),
+                        spaceLevelEnum.getText(),
+                        spaceLevelEnum.getMaxCount(),
+                        spaceLevelEnum.getMaxSize()))
+                .collect(Collectors.toList());
+        return ResultUtils.success(spaceLevelList);
+    }
+
+    @ApiOperation("分页查询空间")
+    @PostMapping("/list/page")
+    @AuthCheck(mustRole = ADMIN_ROLE)
+    public BaseResponse<Page<SpaceVO>> listSpaceByPage(@RequestBody SpaceQueryRequest queryRequest){
+        if (ObjectUtil.isEmpty(queryRequest)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        Page<SpaceVO> page = spaceService.listSpaceByPage(queryRequest);
+        return ResultUtils.success(page);
+    }
+
+    @GetMapping("/get/vo")
+    @ApiOperation("根据id获取空间vo")
+    public BaseResponse<SpaceVO> getSpaceVoById(Long id){
+        if (ObjectUtil.isEmpty(id)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        Space space = spaceService.getById(id);
+        return ResultUtils.success(SpaceVO.objToVo(space));
+    }
+
 }

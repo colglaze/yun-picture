@@ -1,11 +1,13 @@
 package com.colglaze.yunpicture.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.colglaze.yunpicture.model.dto.space.SpaceAddRequest;
 import com.colglaze.yunpicture.model.dto.space.SpaceEditRequest;
 import com.colglaze.yunpicture.model.dto.space.SpaceQueryRequest;
 import com.colglaze.yunpicture.model.dto.space.SpaceUpdateRequest;
 import com.colglaze.yunpicture.model.entity.Space;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.colglaze.yunpicture.model.vo.SpaceVO;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -62,4 +64,11 @@ public interface SpaceService extends IService<Space> {
      * @param add
      */
     void validSpace(Space space, boolean add);
+
+    /**
+     * 分页查询空间信息
+     * @param queryRequest
+     * @return
+     */
+    Page<SpaceVO> listSpaceByPage(SpaceQueryRequest queryRequest);
 }

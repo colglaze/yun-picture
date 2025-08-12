@@ -3,6 +3,8 @@ package com.colglaze.yunpicture.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.colglaze.yunpicture.constant.UserConstant;
 import com.colglaze.yunpicture.exceptions.BusinessException;
@@ -15,6 +17,8 @@ import com.colglaze.yunpicture.model.dto.space.SpaceUpdateRequest;
 import com.colglaze.yunpicture.model.entity.Space;
 import com.colglaze.yunpicture.model.entity.User;
 import com.colglaze.yunpicture.model.enums.SpaceLevelEnum;
+import com.colglaze.yunpicture.model.vo.SpaceVO;
+import com.colglaze.yunpicture.model.vo.UserVO;
 import com.colglaze.yunpicture.service.SpaceService;
 import com.colglaze.yunpicture.mapper.SpaceMapper;
 import com.colglaze.yunpicture.service.UserService;
@@ -23,9 +27,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 
 /**
@@ -161,6 +167,32 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space>
         if (StrUtil.isNotBlank(spaceName) && spaceName.length() > 30) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "空间名称过长");
         }
+    }
+
+    @Override
+    public Page<SpaceVO> listSpaceByPage(SpaceQueryRequest queryRequest) {
+        long current = queryRequest.getCurrent();
+        long pageSize = queryRequest.getPageSize();
+        //构建查询条件
+        LambdaQueryWrapper<Space> queryWrapper = new LambdaQueryWrapper();
+        queryWrapper
+                .eq(ObjectUtil.isNotEmpty(queryRequest.getId()),Space::getId,queryRequest.getId())
+                .eq(ObjectUtil.isNotEmpty(queryRequest.getUserId()),Space::getUserId,queryRequest.getUserId())
+                .eq(StrUtil.isNotBlank(queryRequest.getSpaceName()),Space::getSpaceName,queryRequest.getSpaceName())
+                .eq(ObjectUtil.isNotEmpty(queryRequest.getSpaceLevel()),Space::getSpaceLevel,queryRequest.getSpaceLevel());
+
+        //创建返回分页
+        Page<Space> page = this.page(new Page<>(current, pageSize), queryWrapper);
+        Page<SpaceVO> spaceVOPage = new Page<>(current, pageSize, page.getTotal());
+        //使用stream流将list<user>转换为list<userVo>
+        List<SpaceVO> userVos = page.getRecords().stream().map(space -> {
+            SpaceVO spaceVO = new SpaceVO();
+            BeanUtil.copyProperties(space, spaceVO);
+            return spaceVO;
+        }).collect(Collectors.toList());
+        //返回结果
+        spaceVOPage.setRecords(userVos);
+        return spaceVOPage;
     }
 
 }

@@ -22,4 +22,7 @@ public interface RedisConstant {
     // 按用户维度的版本号前缀（备用，如需要按用户页面失效）
     String PICTURE_VERSION_USER_PREFIX = "picture:version:user:";
 
+    //用于存储当前登录用户的角色
+    String USER_ROLE_GET = "user_role_get";
+
 }

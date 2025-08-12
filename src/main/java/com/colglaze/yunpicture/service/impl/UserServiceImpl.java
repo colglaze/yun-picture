@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
+import com.colglaze.yunpicture.constant.RedisConstant;
 import com.colglaze.yunpicture.model.dto.user.*;
 import com.colglaze.yunpicture.model.entity.User;
 import com.colglaze.yunpicture.exceptions.BusinessException;
@@ -18,6 +19,7 @@ import com.colglaze.yunpicture.service.UserService;
 import com.colglaze.yunpicture.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +38,8 @@ import static com.colglaze.yunpicture.constant.UserConstant.USER_LOGIN_STATE;
 @RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         implements UserService {
+
+    private final StringRedisTemplate redisTemplate;
 
     @Override
     public Long userRegister(UserRegisterRequest registerRequest) {
@@ -121,6 +125,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
         }
         request.getSession().removeAttribute(USER_LOGIN_STATE);
+        redisTemplate.delete(RedisConstant.USER_ROLE_GET + user.getId());
         return true;
     }
 

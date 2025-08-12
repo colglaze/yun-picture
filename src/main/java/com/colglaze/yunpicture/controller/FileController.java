@@ -45,6 +45,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static com.colglaze.yunpicture.constant.RedisConstant.PICTURE_VERSION_KEY;
 import static com.colglaze.yunpicture.constant.RedisConstant.PICTURE_VERSION_SPACE_PREFIX;
@@ -198,6 +199,7 @@ public class FileController {
     @ApiOperation("分页获取图片列表")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<Picture>> listPictureByPage(@RequestBody PictureQueryRequest pictureQueryRequest) {
+
         Page<Picture> picturePage = pictureService.listPictureByPage(pictureQueryRequest, false);
         return ResultUtils.success(picturePage);
     }
@@ -278,5 +280,14 @@ public class FileController {
         return ResultUtils.success(uploadCount);
     }
 
+    @GetMapping("/debug/versions")
+    @ApiOperation("获取当前版本号（调试用）")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Map<String, Long>> getCurrentVersions(
+            @RequestParam(required = false) Long userId,
+            @RequestParam(required = false) Long spaceId) {
+        Map<String, Long> versions = pictureService.getCurrentVersions(userId, spaceId);
+        return ResultUtils.success(versions);
+    }
 
 }
