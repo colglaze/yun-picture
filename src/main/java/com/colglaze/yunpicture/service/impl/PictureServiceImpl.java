@@ -98,7 +98,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         //构造入库信息
         Long spaceId = ObjectUtil.isNotEmpty(pictureUploadRequest.getSpaceId()) ? pictureUploadRequest.getSpaceId() : -1L;
         Picture picture = Picture.builder().userId(loginUser.getId()).spaceId(spaceId).build();
-        BeanUtil.copyProperties(imageMetadata, picture);
+        BeanUtil.copyProperties(imageMetadata, picture, true);
         String tags = JSONUtil.toJsonStr(imageMetadata.getTags());
         picture.setTags(tags);
         return getPictureVO(pictureUploadRequest, loginUser, picture, pictureResult);
@@ -459,6 +459,12 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         } else {
             picture.setReviewStatus(PictureReviewStatusEnum.REVIEWING.getValue());
         }
+        if (picture.getSpaceId() != -1L) {
+            picture.setReviewerId(loginUser.getId());
+            picture.setReviewMessage("私人空间无需审核");
+            picture.setReviewTime(LocalDateTime.now());
+            picture.setReviewStatus(PictureReviewStatusEnum.PASS.getValue());
+        }
     }
 
     @Override
@@ -596,7 +602,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
     private PictureVO getPictureVO(PictureUploadRequest pictureUploadRequest, User loginUser,
                                    Picture picture, UploadPictureResult pictureResult) {
         this.fillReviewParams(picture, loginUser);
-        BeanUtil.copyProperties(pictureResult, picture);
+        BeanUtil.copyProperties(pictureResult, picture, true);
         //pictureId不为空，更新，补充id和编辑时间
         Long pictureId = pictureUploadRequest.getId();
         if (ObjectUtil.isNotEmpty(pictureId)) {
@@ -609,7 +615,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "只有本人和管理员才可以编辑图片");
         }
         //否则直接入库
-        picture.setSpaceId(pictureUploadRequest.getSpaceId());
+//        picture.setSpaceId(pictureUploadRequest.getSpaceId());
         // 开启事务
         Long finalSpaceId = pictureUploadRequest.getSpaceId();
         transactionTemplate.execute(status -> {
@@ -823,6 +829,9 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         User loginUser = userService.getLoginUser(request);
         if (StrUtil.equals(loginUser.getUserRole(), UserConstant.ADMIN_ROLE) || ObjectUtil.equal(loginUser.getId(), picture.getUserId())) {
             checkPictureAuth(loginUser, picture);
+            if (ObjectUtil.isEmpty(picture.getSpaceId())) {
+                picture.setSpaceId(-1L);
+            }
             this.fillReviewParams(picture, loginUser);
             boolean update = this.updateById(picture);
             if (update) {
