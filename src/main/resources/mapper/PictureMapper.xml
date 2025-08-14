@@ -55,6 +55,7 @@
             tag VARCHAR(255) PATH '$'
             )
             ) AS j
+            WHERE isDelete = 0
             ) exploded
         GROUP BY tag
         ORDER BY count DESC
@@ -63,7 +64,7 @@
     <select id="getCategory" resultType="java.lang.String">
         SELECT category, COUNT(*) AS count
         FROM `picture`
-        WHERE category IS NOT NULL
+        WHERE category IS NOT NULL AND isDelete = 0
         GROUP BY category
         ORDER BY count DESC
         LIMIT 9;

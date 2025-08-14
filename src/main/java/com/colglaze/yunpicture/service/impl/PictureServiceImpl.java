@@ -374,7 +374,8 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
                 .eq(ObjectUtil.isNotEmpty(queryRequest.getPicHeight()), Picture::getPicHeight, queryRequest.getPicHeight())
                 .eq(ObjectUtil.isNotEmpty(queryRequest.getPicSize()), Picture::getPicSize, queryRequest.getPicSize())
                 .eq(ObjectUtil.isNotEmpty(queryRequest.getPicScale()), Picture::getPicScale, queryRequest.getPicScale())
-                .eq(isDefault || ObjectUtil.isNotEmpty(queryRequest.getReviewStatus()), Picture::getReviewStatus, queryRequest.getReviewStatus());
+                .eq(isDefault || ObjectUtil.isNotEmpty(queryRequest.getReviewStatus()),
+                        Picture::getReviewStatus, queryRequest.getReviewStatus());
         if (StrUtil.isNotBlank(queryRequest.getSearchText())) {
             queryWrapper.and(qw -> qw.like(Picture::getIntroduction, queryRequest.getSearchText())
                     .or().like(Picture::getName, queryRequest.getSearchText()));
@@ -617,11 +618,11 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         //否则直接入库
 //        picture.setSpaceId(pictureUploadRequest.getSpaceId());
         // 开启事务
-        Long finalSpaceId = pictureUploadRequest.getSpaceId();
+        Long finalSpaceId = ObjectUtil.isNotEmpty(pictureUploadRequest.getSpaceId()) ? pictureUploadRequest.getSpaceId() : -1L;
         transactionTemplate.execute(status -> {
             boolean result = this.saveOrUpdate(picture);
             ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR, "图片上传失败");
-            if (finalSpaceId != null) {
+            if (finalSpaceId != -1) {
                 boolean update = spaceService.lambdaUpdate()
                         .eq(Space::getId, finalSpaceId)
                         .setSql("totalSize = totalSize + " + picture.getPicSize())
