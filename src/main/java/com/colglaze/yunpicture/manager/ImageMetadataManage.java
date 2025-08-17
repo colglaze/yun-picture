@@ -1,8 +1,7 @@
 package com.colglaze.yunpicture.manager;
 
-import cn.hutool.core.collection.CollUtil;
+
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ObjectUtil;
 import com.baidu.aip.imageclassify.AipImageClassify;
 import com.colglaze.yunpicture.exceptions.BusinessException;
 import com.colglaze.yunpicture.exceptions.ErrorCode;
@@ -11,11 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 

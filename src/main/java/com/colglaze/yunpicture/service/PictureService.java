@@ -7,6 +7,7 @@ import com.colglaze.yunpicture.model.dto.picture.*;
 import com.colglaze.yunpicture.model.entity.Picture;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.colglaze.yunpicture.model.entity.User;
+import com.colglaze.yunpicture.model.vo.CreateOutPaintingTaskResponse;
 import com.colglaze.yunpicture.model.vo.PictureTagCategory;
 import com.colglaze.yunpicture.model.vo.PictureVO;
 import org.springframework.web.multipart.MultipartFile;
@@ -137,5 +138,13 @@ public interface PictureService extends IService<Picture> {
      * @return
      */
     Map<String, Long> getCurrentVersions(Long userId, Long spaceId);
+
+    /**
+     * 阿里云ai扩图接口
+     * @param createPictureOutPaintingTaskRequest
+     * @param loginUser
+     * @return
+     */
+    CreateOutPaintingTaskResponse createPictureOutPaintingTask(CreatePictureOutPaintingTaskRequest createPictureOutPaintingTaskRequest, User loginUser);
 
 }

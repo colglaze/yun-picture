@@ -1,30 +1,28 @@
 package com.colglaze.yunpicture.controller;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.ObjectUtil;
+
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.colglaze.yunpicture.annotation.AuthCheck;
 import com.colglaze.yunpicture.common.BaseResponse;
 import com.colglaze.yunpicture.common.DeleteRequest;
 import com.colglaze.yunpicture.common.ResultUtils;
-import com.colglaze.yunpicture.constant.RedisConstant;
+
 import com.colglaze.yunpicture.constant.UserConstant;
 import com.colglaze.yunpicture.exceptions.BusinessException;
 import com.colglaze.yunpicture.exceptions.ErrorCode;
 import com.colglaze.yunpicture.exceptions.ThrowUtils;
+import com.colglaze.yunpicture.manager.AliYunAiManager;
 import com.colglaze.yunpicture.manager.CosManager;
 import com.colglaze.yunpicture.model.dto.picture.*;
 import com.colglaze.yunpicture.model.entity.Picture;
 import com.colglaze.yunpicture.model.entity.User;
+import com.colglaze.yunpicture.model.vo.CreateOutPaintingTaskResponse;
+import com.colglaze.yunpicture.model.vo.GetOutPaintingTaskResponse;
 import com.colglaze.yunpicture.model.vo.PictureTagCategory;
 import com.colglaze.yunpicture.model.vo.PictureVO;
 import com.colglaze.yunpicture.service.PictureService;
 import com.colglaze.yunpicture.service.UserService;
-import com.colglaze.yunpicture.utils.CaffeineUtil;
-import com.colglaze.yunpicture.utils.RedisUtil;
 import com.qcloud.cos.model.COSObject;
 import com.qcloud.cos.model.COSObjectInputStream;
 import com.qcloud.cos.utils.IOUtils;
@@ -32,8 +30,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,14 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
-
-import static com.colglaze.yunpicture.constant.RedisConstant.PICTURE_VERSION_KEY;
-import static com.colglaze.yunpicture.constant.RedisConstant.PICTURE_VERSION_SPACE_PREFIX;
 
 /*
 @author ColGlaze
@@ -67,7 +56,7 @@ public class FileController {
 
     private final PictureService pictureService;
 
-    private final StringRedisTemplate redisTemplate;
+    private final AliYunAiManager aliYunAiManager;
 
     /**
      * 测试文件上传
@@ -289,5 +278,31 @@ public class FileController {
         Map<String, Long> versions = pictureService.getCurrentVersions(userId, spaceId);
         return ResultUtils.success(versions);
     }
+
+    /**
+     * 创建 AI 扩图任务
+     */
+    @PostMapping("/out_painting/create_task")
+    public BaseResponse<CreateOutPaintingTaskResponse> createPictureOutPaintingTask(
+            @RequestBody CreatePictureOutPaintingTaskRequest createPictureOutPaintingTaskRequest,
+            HttpServletRequest request) {
+        if (createPictureOutPaintingTaskRequest == null || createPictureOutPaintingTaskRequest.getPictureId() == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        User loginUser = userService.getLoginUser(request);
+        CreateOutPaintingTaskResponse response = pictureService.createPictureOutPaintingTask(createPictureOutPaintingTaskRequest, loginUser);
+        return ResultUtils.success(response);
+    }
+
+    /**
+     * 查询 AI 扩图任务
+     */
+    @GetMapping("/out_painting/get_task")
+    public BaseResponse<GetOutPaintingTaskResponse> getPictureOutPaintingTask(String taskId) {
+        ThrowUtils.throwIf(StrUtil.isBlank(taskId), ErrorCode.PARAMS_ERROR);
+        GetOutPaintingTaskResponse task = aliYunAiManager.getOutPaintingTask(taskId);
+        return ResultUtils.success(task);
+    }
+
 
 }

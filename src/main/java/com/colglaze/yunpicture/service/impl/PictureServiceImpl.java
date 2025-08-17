@@ -20,6 +20,7 @@ import com.colglaze.yunpicture.constant.UserConstant;
 import com.colglaze.yunpicture.exceptions.BusinessException;
 import com.colglaze.yunpicture.exceptions.ErrorCode;
 import com.colglaze.yunpicture.exceptions.ThrowUtils;
+import com.colglaze.yunpicture.manager.AliYunAiManager;
 import com.colglaze.yunpicture.manager.FileManager;
 
 import com.colglaze.yunpicture.manager.ImageMetadataManage;
@@ -29,6 +30,7 @@ import com.colglaze.yunpicture.model.entity.Picture;
 import com.colglaze.yunpicture.model.entity.Space;
 import com.colglaze.yunpicture.model.entity.User;
 import com.colglaze.yunpicture.model.enums.PictureReviewStatusEnum;
+import com.colglaze.yunpicture.model.vo.CreateOutPaintingTaskResponse;
 import com.colglaze.yunpicture.model.vo.PictureTagCategory;
 import com.colglaze.yunpicture.model.vo.PictureVO;
 import com.colglaze.yunpicture.model.vo.UserVO;
@@ -86,6 +88,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
     private final StringRedisTemplate redisTemplate;
     private final SpaceService spaceService;
     private final TransactionTemplate transactionTemplate;
+    private final AliYunAiManager aliYunAiManager;
 
 
     @Override
@@ -612,8 +615,10 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
                     StrUtil.equals(loginUser.getUserRole(), UserConstant.ADMIN_ROLE)) {
                 picture.setId(pictureId);
                 picture.setEditTime(LocalDateTime.now());
+            } else {
+                throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "只有本人和管理员才可以编辑图片");
             }
-            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "只有本人和管理员才可以编辑图片");
+
         }
         //否则直接入库
 //        picture.setSpaceId(pictureUploadRequest.getSpaceId());
@@ -765,8 +770,8 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
 
     @Override
     public void checkPictureAuth(User loginUser, Picture picture) {
-        Long spaceId = picture.getSpaceId();
-        if (spaceId == null) {
+        Long spaceId = ObjectUtil.isNotEmpty(picture.getSpaceId()) ? picture.getSpaceId() : -1L;
+        if (spaceId == -1L) {
             // 公共图库，仅本人或管理员可操作
             if (!picture.getUserId().equals(loginUser.getId()) &&
                     !StrUtil.equals(UserConstant.ADMIN_ROLE, loginUser.getUserRole())) {
@@ -868,6 +873,26 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         ThrowUtils.throwIf(ObjectUtil.isEmpty(picture), ErrorCode.NOT_FOUND_ERROR);
         return picture;
     }
+
+    @Override
+    public CreateOutPaintingTaskResponse createPictureOutPaintingTask(CreatePictureOutPaintingTaskRequest createPictureOutPaintingTaskRequest,
+                                                                      User loginUser) {
+        // 获取图片信息
+        Long pictureId = createPictureOutPaintingTaskRequest.getPictureId();
+        Picture picture = Optional.ofNullable(this.getById(pictureId))
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_ERROR));
+        // 权限校验
+        checkPictureAuth(loginUser, picture);
+        // 构造请求参数
+        CreateOutPaintingTaskRequest taskRequest = new CreateOutPaintingTaskRequest();
+        CreateOutPaintingTaskRequest.Input input = new CreateOutPaintingTaskRequest.Input();
+        input.setImageUrl(picture.getUrl());
+        taskRequest.setInput(input);
+        BeanUtil.copyProperties(createPictureOutPaintingTaskRequest, taskRequest);
+        // 创建任务
+        return aliYunAiManager.createOutPaintingTask(taskRequest);
+    }
+
 
     /**
      * 获取当前版本号（调试用）
