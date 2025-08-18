@@ -654,7 +654,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         ThrowUtils.throwIf(ObjectUtil.isEmpty(loginUser), ErrorCode.NOT_LOGIN_ERROR);
         // 空间权限校验
         Long spaceId = pictureUploadRequest.getSpaceId();
-        if (spaceId != null) {
+        if (spaceId != null && spaceId != -1L) {
             Space space = spaceService.getById(spaceId);
             ThrowUtils.throwIf(space == null, ErrorCode.NOT_FOUND_ERROR, "空间不存在");
             // 必须空间创建人（管理员）才能上传
