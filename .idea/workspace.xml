@@ -4,9 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="rabbitMq改造未完成，回滚">
+    <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="refactor: 回滚 rabbitMq 相关改动&#10;&#10;-移除了 PictureServiceImpl 中与 rabbitMq 相关的代码&#10;- 更新了 workspace.xml 中的任务列表和调试断点&#10;- 回滚了上一次 commit 中关于空间功能的改动">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/SpaceUserController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/space/SpaceUserAddRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/space/SpaceUserEditRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/space/SpaceUserQueryRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/enums/SpaceRoleEnum.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/enums/SpaceTypeEnum.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/vo/SpaceUserVO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/biz/spaceUserAuthConfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/mybatisx/templates.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/mybatisx/templates.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/PictureServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/PictureServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/space/SpaceAddRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/space/SpaceAddRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/space/SpaceQueryRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/space/SpaceQueryRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/vo/SpaceVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/vo/SpaceVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/SpaceServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/SpaceServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,7 +158,7 @@
       <workItem from="1755331782599" duration="4352000" />
       <workItem from="1755396783698" duration="676000" />
       <workItem from="1755430134892" duration="4697000" />
-      <workItem from="1755591001720" duration="305000" />
+      <workItem from="1755591001720" duration="15405000" />
     </task>
     <task id="LOCAL-00001" summary="完成了用户的注册登录功能，实现了管理员对用户的管理以及对用户的分页查询">
       <option name="closed" value="true" />
@@ -380,7 +392,15 @@
       <option name="project" value="LOCAL" />
       <updated>1755532763206</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="refactor: 回滚 rabbitMq 相关改动&#10;&#10;-移除了 PictureServiceImpl 中与 rabbitMq 相关的代码&#10;- 更新了 workspace.xml 中的任务列表和调试断点&#10;- 回滚了上一次 commit 中关于空间功能的改动">
+      <option name="closed" value="true" />
+      <created>1755617092996</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1755617092996</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -410,7 +430,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="修复了登录的小bug" />
     <MESSAGE value="增加vip的字段" />
     <MESSAGE value="更改git上传的文件权限" />
     <MESSAGE value="git测试" />
@@ -435,7 +454,8 @@
     <MESSAGE value="feat(space): 增设空间功能，提升用户隐私保护，bug修改&#10;&#10;- 在 PictureEditRequest 和 PictureUpdateRequest 中添加 spaceId 字段&#10;- 修改 PictureServiceImpl 中的逻辑，支持空间相关的图片处理&#10;- 优化 workspace.xml，更新任务列表和调试断点" />
     <MESSAGE value="(spacefeat): 增设空间功能，提升用户隐私保护，bug修改&#10;&#10;- 在 PictureEditRequest 和 PictureUpdateRequest 中添加 spaceId 字段&#10;- 修改 PictureServiceImpl 中的逻辑，支持空间相关的图片处理- 优化 workspace.xml，更新任务列表和调试断点" />
     <MESSAGE value="rabbitMq改造未完成，回滚" />
-    <option name="LAST_COMMIT_MESSAGE" value="rabbitMq改造未完成，回滚" />
+    <MESSAGE value="refactor: 回滚 rabbitMq 相关改动&#10;&#10;-移除了 PictureServiceImpl 中与 rabbitMq 相关的代码&#10;- 更新了 workspace.xml 中的任务列表和调试断点&#10;- 回滚了上一次 commit 中关于空间功能的改动" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: 回滚 rabbitMq 相关改动&#10;&#10;-移除了 PictureServiceImpl 中与 rabbitMq 相关的代码&#10;- 更新了 workspace.xml 中的任务列表和调试断点&#10;- 回滚了上一次 commit 中关于空间功能的改动" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
