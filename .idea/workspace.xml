@@ -4,9 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="feat(space): 新增团队空间功能并优化用户权限管理&#10;&#10;- 添加空间类型字段，支持私有和团队空间&#10;- 新增空间用户关联表及相关服务接口&#10;- 实现空间成员的添加、删除和权限编辑功能&#10;- 优化用户权限验证逻辑&#10;- 更新相关请求和响应对象以支持新功能">
+    <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="解决以来循环">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/config/HttpRequestWrapperFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/config/RequestWrapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/auth/StpKit.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/auth/model/SpaceUserAuthContext.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/auth/servers/StpInterfaceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/SpaceServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/SpaceServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/UserServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,7 +152,7 @@
       <workItem from="1755396783698" duration="676000" />
       <workItem from="1755430134892" duration="4697000" />
       <workItem from="1755591001720" duration="16949000" />
-      <workItem from="1755829294646" duration="1304000" />
+      <workItem from="1755829294646" duration="7530000" />
     </task>
     <task id="LOCAL-00001" summary="完成了用户的注册登录功能，实现了管理员对用户的管理以及对用户的分页查询">
       <option name="closed" value="true" />
@@ -397,7 +402,15 @@
       <option name="project" value="LOCAL" />
       <updated>1755701270572</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="解决以来循环">
+      <option name="closed" value="true" />
+      <created>1755830927088</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1755830927088</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -427,7 +440,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="更改git上传的文件权限" />
     <MESSAGE value="git测试" />
     <MESSAGE value="图片上传功能实现" />
     <MESSAGE value="图片的管理功能" />
@@ -452,7 +464,8 @@
     <MESSAGE value="rabbitMq改造未完成，回滚" />
     <MESSAGE value="refactor: 回滚 rabbitMq 相关改动&#10;&#10;-移除了 PictureServiceImpl 中与 rabbitMq 相关的代码&#10;- 更新了 workspace.xml 中的任务列表和调试断点&#10;- 回滚了上一次 commit 中关于空间功能的改动" />
     <MESSAGE value="feat(space): 新增团队空间功能并优化用户权限管理&#10;&#10;- 添加空间类型字段，支持私有和团队空间&#10;- 新增空间用户关联表及相关服务接口&#10;- 实现空间成员的添加、删除和权限编辑功能&#10;- 优化用户权限验证逻辑&#10;- 更新相关请求和响应对象以支持新功能" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(space): 新增团队空间功能并优化用户权限管理&#10;&#10;- 添加空间类型字段，支持私有和团队空间&#10;- 新增空间用户关联表及相关服务接口&#10;- 实现空间成员的添加、删除和权限编辑功能&#10;- 优化用户权限验证逻辑&#10;- 更新相关请求和响应对象以支持新功能" />
+    <MESSAGE value="解决以来循环" />
+    <option name="LAST_COMMIT_MESSAGE" value="解决以来循环" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

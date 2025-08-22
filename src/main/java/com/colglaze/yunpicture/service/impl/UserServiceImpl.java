@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import com.colglaze.yunpicture.constant.RedisConstant;
+import com.colglaze.yunpicture.manager.auth.StpKit;
 import com.colglaze.yunpicture.model.dto.user.*;
 import com.colglaze.yunpicture.model.entity.User;
 import com.colglaze.yunpicture.exceptions.BusinessException;
@@ -99,7 +100,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
         LoginUserVO loginUserVO = new LoginUserVO();
         BeanUtil.copyProperties(one,loginUserVO);
+        //记住用户登陆状态
         request.getSession().setAttribute(USER_LOGIN_STATE,one);
+        // 4. 记录用户登录态到 Sa-token，便于空间鉴权时使用，注意保证该用户信息与 SpringSession 中的信息过期时间一致
+        //用户springSession掉了之后会自动退出登录，无须在意权限
+        StpKit.SPACE.login(one.getId());
+        StpKit.SPACE.getSession().set(USER_LOGIN_STATE, one);
+
         return loginUserVO;
     }
 
