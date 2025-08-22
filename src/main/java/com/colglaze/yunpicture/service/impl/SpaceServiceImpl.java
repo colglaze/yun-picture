@@ -10,6 +10,7 @@ import com.colglaze.yunpicture.constant.UserConstant;
 import com.colglaze.yunpicture.exceptions.BusinessException;
 import com.colglaze.yunpicture.exceptions.ErrorCode;
 import com.colglaze.yunpicture.exceptions.ThrowUtils;
+import com.colglaze.yunpicture.mapper.SpaceUserMapper;
 import com.colglaze.yunpicture.model.dto.space.SpaceAddRequest;
 import com.colglaze.yunpicture.model.dto.space.SpaceEditRequest;
 import com.colglaze.yunpicture.model.dto.space.SpaceQueryRequest;
@@ -50,7 +51,7 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space>
 
     private final UserService userService;
     private final TransactionTemplate transactionTemplate;
-    private final SpaceUserService spaceUserService;
+    private final SpaceUserMapper spaceUserMapper;
 
     Map<Long, Object> lockMap = new ConcurrentHashMap<>();
     @Override
@@ -89,7 +90,7 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space>
                             spaceUser.setSpaceId(space.getId());
                             spaceUser.setUserId(userId);
                             spaceUser.setSpaceRole(SpaceRoleEnum.ADMIN.getValue());
-                            result = spaceUserService.save(spaceUser);
+                            result = spaceUserMapper.insert(spaceUser) > 0;
                             ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR, "创建团队成员记录失败");
                         }
                 // 返回新写入的数据 id
