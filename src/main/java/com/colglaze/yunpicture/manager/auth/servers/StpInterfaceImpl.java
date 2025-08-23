@@ -52,7 +52,7 @@ public class StpInterfaceImpl implements StpInterface {
     private final PictureService pictureService;
 
     /**
-     * 返回一个账号所拥有的权限码集合 
+     * 返回一个账号所拥有的权限码集合
      */
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
@@ -115,7 +115,7 @@ public class StpInterfaceImpl implements StpInterface {
             }
             spaceId = picture.getSpaceId();
             // 公共图库，仅本人或管理员可操作
-            if (spaceId == null) {
+            if (spaceId == -1L) {
                 if (picture.getUserId().equals(userId) || StrUtil.equals(loginUser.getUserRole(),
                         UserConstant.ADMIN_ROLE)) {
                     return ADMIN_PERMISSIONS;
@@ -170,7 +170,7 @@ public class StpInterfaceImpl implements StpInterface {
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
         // 本 list 仅做模拟，实际项目中要根据具体业务逻辑来查询角色
-        List<String> list = new ArrayList<String>();    
+        List<String> list = new ArrayList<String>();
         list.add("admin");
         list.add("super-admin");
         return list;
@@ -208,6 +208,10 @@ public class StpInterfaceImpl implements StpInterface {
                     authRequest.setSpaceUserId(id);
                     break;
                 case "space":
+                    //在后续有校验为空的逻辑，-1为公共空间，赋值为null
+                    if (id == -1L) {
+                        id = null;
+                    }
                     authRequest.setSpaceId(id);
                     break;
                 default:
@@ -215,7 +219,6 @@ public class StpInterfaceImpl implements StpInterface {
         }
         return authRequest;
     }
-
 
 
 }
