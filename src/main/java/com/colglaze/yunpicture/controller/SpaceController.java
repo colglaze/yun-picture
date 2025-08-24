@@ -8,12 +8,14 @@ import com.colglaze.yunpicture.common.ResultUtils;
 import com.colglaze.yunpicture.constant.UserConstant;
 import com.colglaze.yunpicture.exceptions.BusinessException;
 import com.colglaze.yunpicture.exceptions.ErrorCode;
+import com.colglaze.yunpicture.manager.auth.SpaceUserAuthManager;
 import com.colglaze.yunpicture.model.dto.space.SpaceAddRequest;
 import com.colglaze.yunpicture.model.dto.space.SpaceEditRequest;
 import com.colglaze.yunpicture.model.dto.space.SpaceQueryRequest;
 import com.colglaze.yunpicture.model.dto.space.SpaceUpdateRequest;
 import com.colglaze.yunpicture.model.dto.user.UserQueryRequest;
 import com.colglaze.yunpicture.model.entity.Space;
+import com.colglaze.yunpicture.model.entity.User;
 import com.colglaze.yunpicture.model.enums.SpaceLevelEnum;
 import com.colglaze.yunpicture.model.vo.SpaceLevel;
 import com.colglaze.yunpicture.model.vo.SpaceVO;
@@ -46,6 +48,7 @@ public class SpaceController {
 
     private final SpaceService spaceService;
     private final UserService userService;
+    private final SpaceUserAuthManager spaceUserAuthManager;
 
     @ApiOperation("创造空间")
     @PostMapping("/create")
@@ -99,12 +102,16 @@ public class SpaceController {
 
     @GetMapping("/get/vo")
     @ApiOperation("根据id获取空间vo")
-    public BaseResponse<SpaceVO> getSpaceVoById(Long id){
-        if (ObjectUtil.isEmpty(id)) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
+    public BaseResponse<SpaceVO> getSpaceVoById(Long id, HttpServletRequest request){
         Space space = spaceService.getById(id);
-        return ResultUtils.success(SpaceVO.objToVo(space));
+        if (ObjectUtil.isEmpty(space)) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        SpaceVO spaceVO = SpaceVO.objToVo(space);
+        User loginUser = userService.getLoginUser(request);
+        List<String> permissionList = spaceUserAuthManager.getPermissionList(space, loginUser);
+        spaceVO.setPermissionList(permissionList);
+        return ResultUtils.success(spaceVO);
     }
 
 }

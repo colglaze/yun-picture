@@ -576,7 +576,8 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         ThrowUtils.throwIf(ObjectUtil.hasEmpty(deleteRequest, loginUser), ErrorCode.PARAMS_ERROR, "用户未登录或参数为空");
         Picture picture = this.getById(deleteRequest.getId());
         ThrowUtils.throwIf(ObjectUtil.isEmpty(picture), ErrorCode.NOT_FOUND_ERROR);
-        checkPictureAuth(loginUser, picture);
+        //使用sa-token
+//        checkPictureAuth(loginUser, picture);
         // 开启事务
         transactionTemplate.execute(status -> {
             // 操作数据库
@@ -730,19 +731,6 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         }
     }
 
-    /**
-     * 递增全局与用户维度的版本号
-     */
-    private void incrementVersionForUser(Long userId) {
-        try {
-            redisTemplate.opsForValue().increment(PICTURE_VERSION_KEY, 1);
-            if (userId != null) {
-                redisTemplate.opsForValue().increment(PICTURE_VERSION_USER_PREFIX + userId, 1);
-            }
-        } catch (Exception ignore) {
-            // 忽略递增失败，不影响主流程
-        }
-    }
 
     /**
      * 递增全局 + 用户/空间维度版本
@@ -834,7 +822,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         //编辑
         User loginUser = userService.getLoginUser(request);
         if (StrUtil.equals(loginUser.getUserRole(), UserConstant.ADMIN_ROLE) || ObjectUtil.equal(loginUser.getId(), picture.getUserId())) {
-            checkPictureAuth(loginUser, picture);
+//            checkPictureAuth(loginUser, picture);
             if (ObjectUtil.isEmpty(picture.getSpaceId())) {
                 picture.setSpaceId(-1L);
             }
@@ -866,10 +854,10 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         ThrowUtils.throwIf(picture == null, ErrorCode.NOT_FOUND_ERROR);
         // 空间权限校验
         Long spaceId = picture.getSpaceId();
-        if (ObjectUtil.isNotEmpty(spaceId)) {
-            User loginUser = userService.getLoginUser(request);
-            this.checkPictureAuth(loginUser, picture);
-        }
+//        if (ObjectUtil.isNotEmpty(spaceId)) {
+//            User loginUser = userService.getLoginUser(request);
+//            this.checkPictureAuth(loginUser, picture);
+//        }
         ThrowUtils.throwIf(ObjectUtil.isEmpty(picture), ErrorCode.NOT_FOUND_ERROR);
         return picture;
     }
@@ -882,7 +870,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         Picture picture = Optional.ofNullable(this.getById(pictureId))
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_ERROR));
         // 权限校验
-        checkPictureAuth(loginUser, picture);
+//        checkPictureAuth(loginUser, picture);
         // 构造请求参数
         CreateOutPaintingTaskRequest taskRequest = new CreateOutPaintingTaskRequest();
         CreateOutPaintingTaskRequest.Input input = new CreateOutPaintingTaskRequest.Input();

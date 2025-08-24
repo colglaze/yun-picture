@@ -5,9 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="feat(auth): 新增请求包装过滤器和自定义权限验证功能- 添加 HttpRequestWrapperFilter 和 RequestWrapper 类，用于包装请求并支持重复读取&#10;- 实现 SpaceUserAuthContext 类，用于存储用户在特定空间内的授权上下文&#10;- 编写 StpInterfaceImpl 类，自定义权限加载接口实现- 新增 StpKit 类，作为 StpLogic 门面类管理项目中所有的 StpLogic账号体系&#10;- 更新 UserLogin 方法，记录用户登录态到 Sa-token">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/auth/SaTokenContextHolder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/auth/annotation/SaSpaceCheckPermission.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/auth/annotation/SaTokenConfigure.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/auth/servers/StpInterfaceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/auth/servers/StpInterfaceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/FileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/FileController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/SpaceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/SpaceController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/SpaceUserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/SpaceUserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/exceptions/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/exceptions/GlobalExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/auth/SpaceUserAuthManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/auth/SpaceUserAuthManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/vo/PictureVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/vo/PictureVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/vo/SpaceVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/vo/SpaceVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/PictureServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/PictureServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,7 +156,7 @@
       <workItem from="1755396783698" duration="676000" />
       <workItem from="1755430134892" duration="4697000" />
       <workItem from="1755591001720" duration="16949000" />
-      <workItem from="1755829294646" duration="16355000" />
+      <workItem from="1755829294646" duration="26268000" />
     </task>
     <task id="LOCAL-00001" summary="完成了用户的注册登录功能，实现了管理员对用户的管理以及对用户的分页查询">
       <option name="closed" value="true" />
@@ -414,7 +422,15 @@
       <option name="project" value="LOCAL" />
       <updated>1755877418302</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="feat(auth): 新增请求包装过滤器和自定义权限验证功能- 添加 HttpRequestWrapperFilter 和 RequestWrapper 类，用于包装请求并支持重复读取&#10;- 实现 SpaceUserAuthContext 类，用于存储用户在特定空间内的授权上下文&#10;- 编写 StpInterfaceImpl 类，自定义权限加载接口实现- 新增 StpKit 类，作为 StpLogic 门面类管理项目中所有的 StpLogic账号体系&#10;- 更新 UserLogin 方法，记录用户登录态到 Sa-token">
+      <option name="closed" value="true" />
+      <created>1755961275683</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1755961275683</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

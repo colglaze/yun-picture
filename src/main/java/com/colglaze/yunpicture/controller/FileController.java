@@ -1,6 +1,7 @@
 package com.colglaze.yunpicture.controller;
 
 
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.colglaze.yunpicture.annotation.AuthCheck;
@@ -14,14 +15,20 @@ import com.colglaze.yunpicture.exceptions.ErrorCode;
 import com.colglaze.yunpicture.exceptions.ThrowUtils;
 import com.colglaze.yunpicture.manager.AliYunAiManager;
 import com.colglaze.yunpicture.manager.CosManager;
+import com.colglaze.yunpicture.manager.auth.SpaceUserAuthManager;
+import com.colglaze.yunpicture.manager.auth.StpKit;
+import com.colglaze.yunpicture.manager.auth.annotation.SaSpaceCheckPermission;
+import com.colglaze.yunpicture.manager.auth.constant.SpaceUserPermissionConstant;
 import com.colglaze.yunpicture.model.dto.picture.*;
 import com.colglaze.yunpicture.model.entity.Picture;
+import com.colglaze.yunpicture.model.entity.Space;
 import com.colglaze.yunpicture.model.entity.User;
 import com.colglaze.yunpicture.model.vo.CreateOutPaintingTaskResponse;
 import com.colglaze.yunpicture.model.vo.GetOutPaintingTaskResponse;
 import com.colglaze.yunpicture.model.vo.PictureTagCategory;
 import com.colglaze.yunpicture.model.vo.PictureVO;
 import com.colglaze.yunpicture.service.PictureService;
+import com.colglaze.yunpicture.service.SpaceService;
 import com.colglaze.yunpicture.service.UserService;
 import com.qcloud.cos.model.COSObject;
 import com.qcloud.cos.model.COSObjectInputStream;
@@ -37,6 +44,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 /*
@@ -51,12 +59,11 @@ import java.util.Map;
 public class FileController {
 
     private final CosManager cosManager;
-
     private final UserService userService;
-
     private final PictureService pictureService;
-
     private final AliYunAiManager aliYunAiManager;
+    private final SpaceService spaceService;
+    private final SpaceUserAuthManager spaceUserAuthManager;
 
     /**
      * 测试文件上传
@@ -130,6 +137,7 @@ public class FileController {
      */
     @PostMapping("/upload")
     @ApiOperation("上传图片")
+    @SaSpaceCheckPermission(value = SpaceUserPermissionConstant.PICTURE_UPLOAD)
 //    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<PictureVO> uploadPicture(
             @RequestPart("file") MultipartFile multipartFile,
@@ -146,6 +154,7 @@ public class FileController {
      */
     @PostMapping("/delete")
     @ApiOperation("删除图片")
+    @SaSpaceCheckPermission(value = SpaceUserPermissionConstant.PICTURE_DELETE)
     public BaseResponse<Boolean> deletePicture(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
         return pictureService.deletePicture(deleteRequest, request);
     }
@@ -165,6 +174,7 @@ public class FileController {
      */
     @GetMapping("/get")
     @ApiOperation("根据id获取图片")
+    @SaSpaceCheckPermission(value = SpaceUserPermissionConstant.PICTURE_VIEW)
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Picture> getPictureById(long id, HttpServletRequest request) {
         return ResultUtils.success(pictureService.getPictureById(id, request));
@@ -177,7 +187,17 @@ public class FileController {
     @ApiOperation("根据id获取图片vo")
     public BaseResponse<PictureVO> getPictureVOById(long id, HttpServletRequest request) {
         Picture picture = pictureService.getPictureById(id, request);
+        Space space = new Space();
+        Long spaceId = picture.getSpaceId();
+        if (ObjUtil.isNotEmpty(spaceId)) {
+            boolean hasPermission = StpKit.SPACE.hasPermission(SpaceUserPermissionConstant.PICTURE_VIEW);
+            ThrowUtils.throwIf(!hasPermission, ErrorCode.NO_AUTH_ERROR);
+            space = spaceService.getById(spaceId);
+            ThrowUtils.throwIf(ObjUtil.isEmpty(space), ErrorCode.NOT_FOUND_ERROR, "空间不存在");
+        }
+        List<String> permissionList = spaceUserAuthManager.getPermissionList(space, userService.getLoginUser(request));
         PictureVO pictureVO = PictureVO.objToVo(picture);
+        pictureVO.setPermissionList(permissionList);
         return ResultUtils.success(pictureVO);
     }
 
@@ -209,6 +229,7 @@ public class FileController {
      */
     @PostMapping("/edit")
     @ApiOperation("编辑图片")
+    @SaSpaceCheckPermission(value = SpaceUserPermissionConstant.PICTURE_EDIT)
     public BaseResponse<Boolean> editPicture(@RequestBody PictureEditRequest pictureEditRequest, HttpServletRequest request) {
         return pictureService.editPicture(pictureEditRequest, request);
     }
@@ -239,6 +260,7 @@ public class FileController {
      */
     @ApiOperation("通过url上传图片")
     @PostMapping("/upload/url")
+    @SaSpaceCheckPermission(value = SpaceUserPermissionConstant.PICTURE_UPLOAD)
     public BaseResponse<PictureVO> uploadPictureByUrl(
             @RequestBody PictureUploadRequest pictureUploadRequest,
             HttpServletRequest request) {
@@ -283,6 +305,7 @@ public class FileController {
      * 创建 AI 扩图任务
      */
     @PostMapping("/out_painting/create_task")
+    @SaSpaceCheckPermission(value = SpaceUserPermissionConstant.PICTURE_EDIT)
     public BaseResponse<CreateOutPaintingTaskResponse> createPictureOutPaintingTask(
             @RequestBody CreatePictureOutPaintingTaskRequest createPictureOutPaintingTaskRequest,
             HttpServletRequest request) {

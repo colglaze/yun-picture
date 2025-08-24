@@ -3,8 +3,14 @@ package com.colglaze.yunpicture.manager.auth;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.colglaze.yunpicture.constant.UserConstant;
 import com.colglaze.yunpicture.manager.auth.model.SpaceUserAuthConfig;
 import com.colglaze.yunpicture.manager.auth.model.SpaceUserRole;
+import com.colglaze.yunpicture.model.entity.Space;
+import com.colglaze.yunpicture.model.entity.SpaceUser;
+import com.colglaze.yunpicture.model.entity.User;
+import com.colglaze.yunpicture.model.enums.SpaceRoleEnum;
+import com.colglaze.yunpicture.model.enums.SpaceTypeEnum;
 import com.colglaze.yunpicture.service.SpaceUserService;
 import com.colglaze.yunpicture.service.UserService;
 import org.springframework.stereotype.Component;
@@ -46,4 +52,46 @@ public class SpaceUserAuthManager {
         }
         return role.getPermissions();
     }
+
+    public List<String> getPermissionList(Space space, User loginUser) {
+        if (loginUser == null) {
+            return new ArrayList<>();
+        }
+        // 管理员权限
+        List<String> ADMIN_PERMISSIONS = getPermissionsByRole(SpaceRoleEnum.ADMIN.getValue());
+        // 公共图库
+        if (space == null) {
+            if (StrUtil.equals(UserConstant.ADMIN_ROLE, loginUser.getUserRole())) {
+                return ADMIN_PERMISSIONS;
+            }
+            return new ArrayList<>();
+        }
+        SpaceTypeEnum spaceTypeEnum = SpaceTypeEnum.getEnumByValue(space.getSpaceType());
+        if (spaceTypeEnum == null) {
+            return new ArrayList<>();
+        }
+        // 根据空间获取对应的权限
+        switch (spaceTypeEnum) {
+            case PRIVATE:
+                // 私有空间，仅本人或管理员有所有权限
+                if (space.getUserId().equals(loginUser.getId()) || StrUtil.equals(UserConstant.ADMIN_ROLE, loginUser.getUserRole())) {
+                    return ADMIN_PERMISSIONS;
+                } else {
+                    return new ArrayList<>();
+                }
+            case TEAM:
+                // 团队空间，查询 SpaceUser 并获取角色和权限
+                SpaceUser spaceUser = spaceUserService.lambdaQuery()
+                        .eq(SpaceUser::getSpaceId, space.getId())
+                        .eq(SpaceUser::getUserId, loginUser.getId())
+                        .one();
+                if (spaceUser == null) {
+                    return new ArrayList<>();
+                } else {
+                    return getPermissionsByRole(spaceUser.getSpaceRole());
+                }
+        }
+        return new ArrayList<>();
+    }
+
 }
