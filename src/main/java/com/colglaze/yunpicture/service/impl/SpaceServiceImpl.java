@@ -1,6 +1,7 @@
 package com.colglaze.yunpicture.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -10,6 +11,7 @@ import com.colglaze.yunpicture.constant.UserConstant;
 import com.colglaze.yunpicture.exceptions.BusinessException;
 import com.colglaze.yunpicture.exceptions.ErrorCode;
 import com.colglaze.yunpicture.exceptions.ThrowUtils;
+import com.colglaze.yunpicture.manager.sharding.DynamicShardingManager;
 import com.colglaze.yunpicture.mapper.SpaceUserMapper;
 import com.colglaze.yunpicture.model.dto.space.SpaceAddRequest;
 import com.colglaze.yunpicture.model.dto.space.SpaceEditRequest;
@@ -28,9 +30,11 @@ import com.colglaze.yunpicture.mapper.SpaceMapper;
 import com.colglaze.yunpicture.service.SpaceUserService;
 import com.colglaze.yunpicture.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +56,9 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space>
     private final UserService userService;
     private final TransactionTemplate transactionTemplate;
     private final SpaceUserMapper spaceUserMapper;
+    @Lazy
+    @Resource
+    private DynamicShardingManager dynamicShardingManager;
 
     Map<Long, Object> lockMap = new ConcurrentHashMap<>();
     @Override
@@ -93,9 +100,12 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space>
                             result = spaceUserMapper.insert(spaceUser) > 0;
                             ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR, "创建团队成员记录失败");
                         }
-                // 返回新写入的数据 id
+                        //创建分表，只有旗舰版才会创建分表
+                        if (ObjUtil.equal(spaceAddRequest.getSpaceLevel(), SpaceLevelEnum.FLAGSHIP.getValue())) {
+                            dynamicShardingManager.createSpacePictureTable(space);
+                        }
+                        // 返回新写入的数据 id
                         return space.getId();
-
                     }
                     throw new BusinessException(ErrorCode.OPERATION_ERROR, "每个用户每类空间只能创造一个");
                 });

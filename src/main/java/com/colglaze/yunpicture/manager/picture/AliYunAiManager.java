@@ -1,4 +1,4 @@
-package com.colglaze.yunpicture.manager;
+package com.colglaze.yunpicture.manager.picture;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.ContentType;

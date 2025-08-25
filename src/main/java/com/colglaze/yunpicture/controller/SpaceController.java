@@ -1,5 +1,6 @@
 package com.colglaze.yunpicture.controller;
 
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.colglaze.yunpicture.annotation.AuthCheck;
@@ -100,10 +101,17 @@ public class SpaceController {
         return ResultUtils.success(page);
     }
 
-    @GetMapping("/get/vo")
+    @PostMapping("/get/vo")
     @ApiOperation("根据id获取空间vo")
-    public BaseResponse<SpaceVO> getSpaceVoById(Long id, HttpServletRequest request){
-        Space space = spaceService.getById(id);
+    public BaseResponse<SpaceVO> getSpaceVoById(@RequestBody SpaceQueryRequest queryRequest, HttpServletRequest request){
+        Space space = new Space();
+        if (ObjUtil.isNotEmpty(queryRequest.getId())) {
+            Long id = queryRequest.getId();
+            space = spaceService.getById(id);
+        }else if (ObjUtil.isNotEmpty(queryRequest.getUserId())) {
+            Long userId = queryRequest.getUserId();
+            space = spaceService.lambdaQuery().eq(Space::getUserId, userId).one();
+        }
         if (ObjectUtil.isEmpty(space)) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }

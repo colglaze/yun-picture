@@ -13,8 +13,8 @@ import com.colglaze.yunpicture.constant.UserConstant;
 import com.colglaze.yunpicture.exceptions.BusinessException;
 import com.colglaze.yunpicture.exceptions.ErrorCode;
 import com.colglaze.yunpicture.exceptions.ThrowUtils;
-import com.colglaze.yunpicture.manager.AliYunAiManager;
-import com.colglaze.yunpicture.manager.CosManager;
+import com.colglaze.yunpicture.manager.picture.AliYunAiManager;
+import com.colglaze.yunpicture.manager.picture.CosManager;
 import com.colglaze.yunpicture.manager.auth.SpaceUserAuthManager;
 import com.colglaze.yunpicture.manager.auth.StpKit;
 import com.colglaze.yunpicture.manager.auth.annotation.SaSpaceCheckPermission;
@@ -188,7 +188,7 @@ public class FileController {
     public BaseResponse<PictureVO> getPictureVOById(long id, HttpServletRequest request) {
         Picture picture = pictureService.getPictureById(id, request);
         Space space = new Space();
-        Long spaceId = picture.getSpaceId();
+        Long spaceId = picture.getSpaceId() == -1L ? null : picture.getSpaceId();
         if (ObjUtil.isNotEmpty(spaceId)) {
             boolean hasPermission = StpKit.SPACE.hasPermission(SpaceUserPermissionConstant.PICTURE_VIEW);
             ThrowUtils.throwIf(!hasPermission, ErrorCode.NO_AUTH_ERROR);

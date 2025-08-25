@@ -4,18 +4,63 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="feat(auth): 新增请求包装过滤器和自定义权限验证功能- 添加 HttpRequestWrapperFilter 和 RequestWrapper 类，用于包装请求并支持重复读取&#10;- 实现 SpaceUserAuthContext 类，用于存储用户在特定空间内的授权上下文&#10;- 编写 StpInterfaceImpl 类，自定义权限加载接口实现- 新增 StpKit 类，作为 StpLogic 门面类管理项目中所有的 StpLogic账号体系&#10;- 更新 UserLogin 方法，记录用户登录态到 Sa-token">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/auth/annotation/SaSpaceCheckPermission.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/auth/annotation/SaTokenConfigure.java" afterDir="false" />
+    <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="sa-token权限校验添加完善">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/sharding/DynamicShardingManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/sharding/PictureShardingAlgorithm.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/colglaze/yunpicture/TagTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/2d7b85bb-2b19-45b0-a9ca-0479664690ea.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/2d7b85bb-2b19-45b0-a9ca-0479664690ea.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/FileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/FileController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/SpaceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/SpaceController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/SpaceUserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/SpaceUserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/exceptions/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/exceptions/GlobalExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/auth/SpaceUserAuthManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/auth/SpaceUserAuthManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/vo/PictureVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/vo/PictureVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/vo/SpaceVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/vo/SpaceVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/AliYunAiManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/picture/AliYunAiManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/CosManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/picture/CosManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/FileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/picture/FileManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/ImageMetadataManage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/picture/ImageMetadataManage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/auth/servers/StpInterfaceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/auth/servers/StpInterfaceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/entity/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/PictureServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/PictureServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/SpaceServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/SpaceServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/PictureMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/PictureMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/YunPictureApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/annotation/AuthCheck.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/aop/AuthInterceptor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/common/BaseResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/common/DeleteRequest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/common/PageRequest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/common/ResultUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/config/CorsConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/config/JsonConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/config/MyBatisPlusConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/constant/UserConstant.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/controller/UserController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/exceptions/BusinessException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/exceptions/ErrorCode.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/exceptions/GlobalExceptionHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/exceptions/ThrowUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/mapper/UserMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/dto/user/UserAddRequest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/dto/user/UserLoginRequest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/dto/user/UserQueryRequest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/dto/user/UserRegisterRequest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/dto/user/UserUpdateRequest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/dto/user/UserVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/entity/User$UserBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/entity/User.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/enums/UserRoleEnum.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/vo/LoginUserVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/vo/PictureTagCategory.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/model/vo/UserVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/service/UserService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/service/impl/UserServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/colglaze/yunpicture/utils/JwtUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-archiver/pom.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/yun-picture-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/yun-picture-0.0.1-SNAPSHOT.jar" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,6 +92,9 @@
   <component name="MavenRunner">
     <option name="skipTests" value="true" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
 }</component>
@@ -60,6 +108,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "JUnit.TagTest.test01.executor": "Run",
     "Maven.yun-picture [clean].executor": "Run",
     "Maven.yun-picture [compile].executor": "Run",
     "Maven.yun-picture [install].executor": "Run",
@@ -103,7 +152,31 @@
       <recent name="D:\IdeaWorkSpace\yun-picture" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Spring Boot.YunPictureApplication">
+    <configuration name="TagTest.test01" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="yun-picture" />
+      <shortenClasspath name="ARGS_FILE" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.colglaze.yunpicture.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.colglaze.yunpicture" />
+      <option name="MAIN_CLASS_NAME" value="com.colglaze.yunpicture.TagTest" />
+      <option name="METHOD_NAME" value="test01" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <shortenClasspath name="ARGS_FILE" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="YunPictureApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="yun-picture" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.colglaze.yunpicture.YunPictureApplication" />
@@ -120,6 +193,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Spring Boot.YunPictureApplication" />
+        <item itemvalue="JUnit.TagTest.test01" />
       </list>
     </recent_temporary>
   </component>
@@ -156,7 +230,8 @@
       <workItem from="1755396783698" duration="676000" />
       <workItem from="1755430134892" duration="4697000" />
       <workItem from="1755591001720" duration="16949000" />
-      <workItem from="1755829294646" duration="26268000" />
+      <workItem from="1755829294646" duration="49214000" />
+      <workItem from="1756111698624" duration="1164000" />
     </task>
     <task id="LOCAL-00001" summary="完成了用户的注册登录功能，实现了管理员对用户的管理以及对用户的分页查询">
       <option name="closed" value="true" />
@@ -430,7 +505,15 @@
       <option name="project" value="LOCAL" />
       <updated>1755961275683</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="sa-token权限校验添加完善">
+      <option name="closed" value="true" />
+      <created>1756037192244</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1756037192244</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -460,7 +543,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="图片上传功能实现" />
     <MESSAGE value="图片的管理功能" />
     <MESSAGE value="忽略敏感信息" />
     <MESSAGE value="小bug修改" />
@@ -485,7 +567,39 @@
     <MESSAGE value="feat(space): 新增团队空间功能并优化用户权限管理&#10;&#10;- 添加空间类型字段，支持私有和团队空间&#10;- 新增空间用户关联表及相关服务接口&#10;- 实现空间成员的添加、删除和权限编辑功能&#10;- 优化用户权限验证逻辑&#10;- 更新相关请求和响应对象以支持新功能" />
     <MESSAGE value="解决以来循环" />
     <MESSAGE value="feat(auth): 新增请求包装过滤器和自定义权限验证功能- 添加 HttpRequestWrapperFilter 和 RequestWrapper 类，用于包装请求并支持重复读取&#10;- 实现 SpaceUserAuthContext 类，用于存储用户在特定空间内的授权上下文&#10;- 编写 StpInterfaceImpl 类，自定义权限加载接口实现- 新增 StpKit 类，作为 StpLogic 门面类管理项目中所有的 StpLogic账号体系&#10;- 更新 UserLogin 方法，记录用户登录态到 Sa-token" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(auth): 新增请求包装过滤器和自定义权限验证功能- 添加 HttpRequestWrapperFilter 和 RequestWrapper 类，用于包装请求并支持重复读取&#10;- 实现 SpaceUserAuthContext 类，用于存储用户在特定空间内的授权上下文&#10;- 编写 StpInterfaceImpl 类，自定义权限加载接口实现- 新增 StpKit 类，作为 StpLogic 门面类管理项目中所有的 StpLogic账号体系&#10;- 更新 UserLogin 方法，记录用户登录态到 Sa-token" />
+    <MESSAGE value="sa-token权限校验添加完善" />
+    <option name="LAST_COMMIT_MESSAGE" value="sa-token权限校验添加完善" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/PictureServiceImpl.java</url>
+          <line>564</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/PictureServiceImpl.java</url>
+          <line>561</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/auth/servers/StpInterfaceImpl.java</url>
+          <line>82</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/sharding/DynamicShardingManager.java</url>
+          <line>72</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/SpaceServiceImpl.java</url>
+          <line>88</line>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

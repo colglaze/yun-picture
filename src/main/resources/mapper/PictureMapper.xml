@@ -41,25 +41,7 @@
         spaceId,picColor
     </sql>
     <select id="getTags" resultType="java.lang.String">
-        SELECT tag, COUNT(*) AS count
-        FROM (
-            -- 展开 JSON 数组中的标签
-            SELECT
-            p.id,  -- 关联原表 ID
-            j.tag  -- 展开的单个标签
-            FROM picture p
-            -- 核心：用 JSON_TABLE 展开 JSON 数组
-            JOIN JSON_TABLE(
-            p.tags,
-            '$[*]' COLUMNS(
-            tag VARCHAR(255) PATH '$'
-            )
-            ) AS j
-            WHERE isDelete = 0
-            ) exploded
-        GROUP BY tag
-        ORDER BY count DESC
-        LIMIT 12;
+        SELECT tags FROM picture WHERE tags IS NOT NULL;
     </select>
     <select id="getCategory" resultType="java.lang.String">
         SELECT category, COUNT(*) AS count

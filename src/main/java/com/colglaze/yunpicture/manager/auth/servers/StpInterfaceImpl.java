@@ -99,6 +99,9 @@ public class StpInterfaceImpl implements StpInterface {
         }
         // 如果没有 spaceUserId，尝试通过 spaceId 或 pictureId 获取 Space 对象并处理
         Long spaceId = authContext.getSpaceId();
+        if (spaceId != null && spaceId == -1L) {
+            spaceId = null;
+        }
         if (spaceId == null) {
             // 如果没有 spaceId，通过 pictureId 获取 Picture 对象和 Space 对象
             Long pictureId = authContext.getPictureId();

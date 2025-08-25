@@ -5,7 +5,6 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.*;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -20,10 +19,10 @@ import com.colglaze.yunpicture.constant.UserConstant;
 import com.colglaze.yunpicture.exceptions.BusinessException;
 import com.colglaze.yunpicture.exceptions.ErrorCode;
 import com.colglaze.yunpicture.exceptions.ThrowUtils;
-import com.colglaze.yunpicture.manager.AliYunAiManager;
-import com.colglaze.yunpicture.manager.FileManager;
+import com.colglaze.yunpicture.manager.picture.AliYunAiManager;
+import com.colglaze.yunpicture.manager.picture.FileManager;
 
-import com.colglaze.yunpicture.manager.ImageMetadataManage;
+import com.colglaze.yunpicture.manager.picture.ImageMetadataManage;
 import com.colglaze.yunpicture.model.dto.file.UploadPictureResult;
 import com.colglaze.yunpicture.model.dto.picture.*;
 import com.colglaze.yunpicture.model.entity.Picture;
@@ -40,6 +39,7 @@ import com.colglaze.yunpicture.service.SpaceService;
 import com.colglaze.yunpicture.service.UserService;
 import com.colglaze.yunpicture.utils.CaffeineUtil;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -67,7 +67,6 @@ import static com.colglaze.yunpicture.constant.RedisConstant.PICTURE_SINGLE_KEY;
 import static com.colglaze.yunpicture.constant.RedisConstant.PICTURE_VERSION_KEY;
 import static com.colglaze.yunpicture.constant.RedisConstant.PICTURE_VERSION_USER_PREFIX;
 import static com.colglaze.yunpicture.constant.RedisConstant.PICTURE_VERSION_SPACE_PREFIX;
-import static com.colglaze.yunpicture.constant.UserConstant.USER_LOGIN_STATE;
 import static com.colglaze.yunpicture.utils.CaffeineUtil.LOCAL_CACHE;
 
 /**
@@ -89,7 +88,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
     private final SpaceService spaceService;
     private final TransactionTemplate transactionTemplate;
     private final AliYunAiManager aliYunAiManager;
-
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public PictureVO uploadPicture(MultipartFile multipartFile, PictureUploadRequest pictureUploadRequest, User loginUser) throws IOException {
@@ -560,13 +559,44 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
             PictureTagCategory tagCategory = JSONUtil.toBean(cacheValue, PictureTagCategory.class);
             return tagCategory;
         }
-        List<String> tags = pictureMapper.getTags();
+        List<String> tags = getTags();
+
         List<String> category = pictureMapper.getCategory();
         PictureTagCategory tagCategory = new PictureTagCategory(tags, category);
         cacheValue = JSONUtil.toJsonStr(tagCategory);
         //写缓存
         redisTemplate.opsForValue().set(RedisConstant.GET_CATE_AND_TAGS, cacheValue, 1, TimeUnit.DAYS);
         return tagCategory;
+    }
+
+    public List<String> getTags() {
+        // 1. 获取原始标签数据
+        List<String> tagJsonList = pictureMapper.getTags();
+        if (tagJsonList == null || tagJsonList.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // 2. 解析JSON并统计频次
+        Map<String, Integer> tagCountMap = new HashMap<>();
+        for (String tagJson : tagJsonList) {
+            try {
+                List<String> tagList = objectMapper.readValue(tagJson, new com.fasterxml.jackson.core.type.TypeReference<List<String>>() {});
+                for (String tag : tagList) {
+                    if (tag != null && !tag.trim().isEmpty()) {
+                        tagCountMap.put(tag, tagCountMap.getOrDefault(tag, 0) + 1);
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("解析标签JSON失败：" + tagJson + "，错误：" + e.getMessage());
+            }
+        }
+
+        // 3. 按频次排序后，仅提取标签名称（取前12）
+        return tagCountMap.entrySet().stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed()) // 按次数降序
+                .limit(12) // 取前12
+                .map(Map.Entry::getKey) // 只保留标签名称
+                .collect(Collectors.toList());
     }
 
     @Override
