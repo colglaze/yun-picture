@@ -48,6 +48,7 @@ public class DynamicShardingManager {
         // 为了测试方便，直接对所有团队空间分表（实际上线改为仅对旗舰版生效）
         Set<Long> spaceIds = spaceService.lambdaQuery()
                 .eq(Space::getSpaceType, SpaceTypeEnum.TEAM.getValue())
+                .eq(Space::getSpaceLevel, SpaceLevelEnum.FLAGSHIP.getValue())
                 .list()
                 .stream()
                 .map(Space::getId)

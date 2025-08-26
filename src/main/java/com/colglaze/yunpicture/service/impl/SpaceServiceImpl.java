@@ -86,7 +86,10 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space>
                 //使用编程式事务，保证事务边界性，即锁在事务之外，也可将事务方法单独声明，再使用声明式事务
                 transactionTemplate.execute(status -> {
                     //判断之前是否已经创建过空间
-                    Space exists = lambdaQuery().eq(Space::getUserId, userId).eq(Space::getSpaceType, spaceAddRequest.getSpaceType()).one();
+                    Space exists = null;
+                    if (ObjUtil.equal(spaceAddRequest.getSpaceType(), SpaceTypeEnum.PRIVATE)) {
+                        exists = lambdaQuery().eq(Space::getUserId, userId).eq(Space::getSpaceType, SpaceTypeEnum.PRIVATE).one();
+                    }
                     if (ObjectUtil.isEmpty(exists)) {
                         // 写入数据库
                         boolean result = this.save(space);
@@ -107,7 +110,7 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space>
                         // 返回新写入的数据 id
                         return space.getId();
                     }
-                    throw new BusinessException(ErrorCode.OPERATION_ERROR, "每个用户每类空间只能创造一个");
+                    throw new BusinessException(ErrorCode.OPERATION_ERROR, "每个用户只能创造一个私人空间");
                 });
             }finally {
                 //防止内存泄露

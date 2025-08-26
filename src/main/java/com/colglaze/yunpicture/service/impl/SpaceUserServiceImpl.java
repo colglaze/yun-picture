@@ -50,9 +50,11 @@ public class SpaceUserServiceImpl extends ServiceImpl<SpaceUserMapper, SpaceUser
 
     @Override
     public Long addSpaceUser(SpaceUserAddRequest spaceUserAddRequest, HttpServletRequest request) {
+        Long userId = userService.lambdaQuery().eq(User::getUserAccount, spaceUserAddRequest.getUserAccount()).one().getId();
         //拷贝数据
         SpaceUser spaceUser = new SpaceUser();
         BeanUtil.copyProperties(spaceUserAddRequest, spaceUser);
+        spaceUser.setUserId(userId);
         //校验spaceUser是否合法
         validSpaceUser(spaceUser, true);
         boolean save = this.save(spaceUser);
@@ -85,7 +87,7 @@ public class SpaceUserServiceImpl extends ServiceImpl<SpaceUserMapper, SpaceUser
     public List<SpaceUserVO> listSpaceUser(SpaceUserQueryRequest request) {
         //获取space user列表
         LambdaQueryWrapper<SpaceUser> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(ObjectUtil.isNotEmpty(request.getSpaceId()), SpaceUser::getSpaceId, request.getId())
+        wrapper.eq(ObjectUtil.isNotEmpty(request.getId()), SpaceUser::getId, request.getId())
                 .eq(ObjectUtil.isNotEmpty(request.getSpaceId()), SpaceUser::getSpaceId, request.getSpaceId())
                 .eq(ObjectUtil.isNotEmpty(request.getUserId()), SpaceUser::getUserId, request.getUserId())
                 .eq(ObjectUtil.isNotEmpty(request.getSpaceRole()), SpaceUser::getSpaceRole, request.getSpaceRole());

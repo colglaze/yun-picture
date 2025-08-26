@@ -141,7 +141,7 @@ public class FileController {
 //    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<PictureVO> uploadPicture(
             @RequestPart("file") MultipartFile multipartFile,
-            PictureUploadRequest pictureUploadRequest,
+            @ModelAttribute PictureUploadRequest pictureUploadRequest,
             HttpServletRequest request) throws IOException {
         User loginUser = userService.getLoginUser(request);
         PictureVO pictureVO = pictureService.uploadPicture(multipartFile, pictureUploadRequest, loginUser);

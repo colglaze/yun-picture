@@ -22,5 +22,10 @@ public class SpaceUserAddRequest implements Serializable {
      */
     private String spaceRole;
 
+    /**
+     * 用户账号userAccount
+     */
+    private String userAccount;
+
     private static final long serialVersionUID = 1L;
 }

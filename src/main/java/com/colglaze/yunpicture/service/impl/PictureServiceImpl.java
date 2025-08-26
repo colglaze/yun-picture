@@ -857,7 +857,16 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
                 picture.setSpaceId(-1L);
             }
             this.fillReviewParams(picture, loginUser);
-            boolean update = this.updateById(picture);
+            boolean update = lambdaUpdate()
+                    .eq(Picture::getId, picture.getId())
+                    .set(ObjUtil.isNotEmpty(picture.getName()), Picture::getName, picture.getName())
+                    .set(ObjUtil.isNotEmpty(picture.getIntroduction()), Picture::getIntroduction, picture.getIntroduction())
+                    .set(ObjUtil.isNotEmpty(picture.getCategory()), Picture::getCategory, picture.getCategory())
+                    .set(ObjUtil.isNotEmpty(picture.getTags()), Picture::getTags, picture.getTags())
+                    .set(Picture::getEditTime,picture.getEditTime())
+                    .set(Picture::getUserId,picture.getUserId())
+                    .update();
+//            boolean update = this.updateById(picture);
             if (update) {
                 Picture latest = this.getById(picture.getId());
                 if (latest != null) {

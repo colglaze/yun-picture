@@ -18,6 +18,7 @@ import com.colglaze.yunpicture.model.dto.user.UserQueryRequest;
 import com.colglaze.yunpicture.model.entity.Space;
 import com.colglaze.yunpicture.model.entity.User;
 import com.colglaze.yunpicture.model.enums.SpaceLevelEnum;
+import com.colglaze.yunpicture.model.enums.SpaceTypeEnum;
 import com.colglaze.yunpicture.model.vo.SpaceLevel;
 import com.colglaze.yunpicture.model.vo.SpaceVO;
 import com.colglaze.yunpicture.model.vo.UserVO;
@@ -110,7 +111,11 @@ public class SpaceController {
             space = spaceService.getById(id);
         }else if (ObjUtil.isNotEmpty(queryRequest.getUserId())) {
             Long userId = queryRequest.getUserId();
-            space = spaceService.lambdaQuery().eq(Space::getUserId, userId).one();
+            space = spaceService
+                    .lambdaQuery()
+                    .eq(Space::getUserId, userId)
+                    .eq(Space::getSpaceType, SpaceTypeEnum.PRIVATE)
+                    .one();
         }
         if (ObjectUtil.isEmpty(space)) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
