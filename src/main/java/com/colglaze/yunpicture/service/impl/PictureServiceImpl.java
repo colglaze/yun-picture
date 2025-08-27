@@ -442,10 +442,16 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         //判断审核状态是否为未审核
         if (ObjectUtil.notEqual(pictureStatus.getValue(), picture.getReviewStatus())) {
             //更新
-            picture.setReviewStatus(pictureStatus.getValue());
-            picture.setReviewerId(loginUser.getId());
-            picture.setReviewTime(LocalDateTime.now());
-            this.updateById(picture);
+            lambdaUpdate()
+                    .eq(Picture::getId, picture.getId())
+                    .set(Picture::getReviewStatus, pictureStatus.getValue())
+                    .set(Picture::getReviewerId, loginUser.getId())
+                    .set(Picture::getReviewTime, LocalDateTime.now())
+                    .update();
+            // 单条缓存剔除
+            evictSingle(picture.getId());
+            // 刷新版本：全局 + 用户/空间维度
+            incrementVersion(loginUser.getId(), picture.getSpaceId());
             return;
         }
         throw new BusinessException(ErrorCode.PARAMS_ERROR, "请勿重复审核");

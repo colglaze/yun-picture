@@ -2,6 +2,7 @@ package com.colglaze.yunpicture.controller;
 
 
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.colglaze.yunpicture.annotation.AuthCheck;
@@ -46,6 +47,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
+import static com.colglaze.yunpicture.constant.UserConstant.USER_LOGIN_STATE;
 
 /*
 @author ColGlaze
@@ -187,7 +190,7 @@ public class FileController {
     @ApiOperation("根据id获取图片vo")
     public BaseResponse<PictureVO> getPictureVOById(long id, HttpServletRequest request) {
         Picture picture = pictureService.getPictureById(id, request);
-        Space space = new Space();
+        Space space = null;
         Long spaceId = picture.getSpaceId() == -1L ? null : picture.getSpaceId();
         if (ObjUtil.isNotEmpty(spaceId)) {
             boolean hasPermission = StpKit.SPACE.hasPermission(SpaceUserPermissionConstant.PICTURE_VIEW);
@@ -195,7 +198,13 @@ public class FileController {
             space = spaceService.getById(spaceId);
             ThrowUtils.throwIf(ObjUtil.isEmpty(space), ErrorCode.NOT_FOUND_ERROR, "空间不存在");
         }
-        List<String> permissionList = spaceUserAuthManager.getPermissionList(space, userService.getLoginUser(request));
+        User user = (User) request.getSession().getAttribute(USER_LOGIN_STATE);
+        User loginUser = null;
+        //判断是否登录
+        if (ObjectUtil.isNotEmpty(user)) {
+            loginUser = userService.getLoginUser(request);
+        }
+        List<String> permissionList = spaceUserAuthManager.getPermissionList(space, loginUser);
         PictureVO pictureVO = PictureVO.objToVo(picture);
         pictureVO.setPermissionList(permissionList);
         return ResultUtils.success(pictureVO);

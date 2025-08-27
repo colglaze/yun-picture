@@ -4,16 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="分库分表功能完善，对新增功能产生的小bug进行修复">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/2d7b85bb-2b19-45b0-a9ca-0479664690ea.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/2d7b85bb-2b19-45b0-a9ca-0479664690ea.xml" afterDir="false" />
+    <list default="true" id="b980d74c-19c5-4c14-bbb2-ab55ede65c20" name="Changes" comment="sa-token权限校验与分库分表的bug修改以及微调">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/FileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/FileController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/SpaceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/controller/SpaceController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/sharding/DynamicShardingManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/sharding/DynamicShardingManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/sharding/PictureShardingAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/sharding/PictureShardingAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/space/SpaceUserAddRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/model/dto/space/SpaceUserAddRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/PictureServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/PictureServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/SpaceServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/SpaceServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/SpaceUserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/SpaceUserServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -187,7 +181,7 @@
       <workItem from="1755829294646" duration="49214000" />
       <workItem from="1756111698624" duration="15744000" />
       <workItem from="1756198106735" duration="68000" />
-      <workItem from="1756198329572" duration="10898000" />
+      <workItem from="1756198329572" duration="16291000" />
     </task>
     <task id="LOCAL-00001" summary="完成了用户的注册登录功能，实现了管理员对用户的管理以及对用户的分页查询">
       <option name="closed" value="true" />
@@ -477,7 +471,15 @@
       <option name="project" value="LOCAL" />
       <updated>1756119711711</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="sa-token权限校验与分库分表的bug修改以及微调">
+      <option name="closed" value="true" />
+      <created>1756221514761</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1756221514761</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -507,7 +509,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="忽略敏感信息" />
     <MESSAGE value="小bug修改" />
     <MESSAGE value="审核功能的开发" />
     <MESSAGE value="用户上传图片bug修复" />
@@ -532,7 +533,8 @@
     <MESSAGE value="feat(auth): 新增请求包装过滤器和自定义权限验证功能- 添加 HttpRequestWrapperFilter 和 RequestWrapper 类，用于包装请求并支持重复读取&#10;- 实现 SpaceUserAuthContext 类，用于存储用户在特定空间内的授权上下文&#10;- 编写 StpInterfaceImpl 类，自定义权限加载接口实现- 新增 StpKit 类，作为 StpLogic 门面类管理项目中所有的 StpLogic账号体系&#10;- 更新 UserLogin 方法，记录用户登录态到 Sa-token" />
     <MESSAGE value="sa-token权限校验添加完善" />
     <MESSAGE value="分库分表功能完善，对新增功能产生的小bug进行修复" />
-    <option name="LAST_COMMIT_MESSAGE" value="分库分表功能完善，对新增功能产生的小bug进行修复" />
+    <MESSAGE value="sa-token权限校验与分库分表的bug修改以及微调" />
+    <option name="LAST_COMMIT_MESSAGE" value="sa-token权限校验与分库分表的bug修改以及微调" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -541,16 +543,6 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/SpaceServiceImpl.java</url>
           <line>90</line>
           <option name="timeStamp" value="20" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/manager/sharding/PictureShardingAlgorithm.java</url>
-          <line>22</line>
-          <option name="timeStamp" value="25" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/colglaze/yunpicture/service/impl/PictureServiceImpl.java</url>
-          <line>173</line>
-          <option name="timeStamp" value="28" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

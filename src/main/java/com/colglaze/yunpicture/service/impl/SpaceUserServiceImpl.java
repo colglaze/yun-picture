@@ -139,6 +139,7 @@ public class SpaceUserServiceImpl extends ServiceImpl<SpaceUserMapper, SpaceUser
         BeanUtil.copyProperties(editRequest, spaceUser);
         SpaceUser byId = this.getById(editRequest.getId());
         ThrowUtils.throwIf(ObjectUtil.isEmpty(byId), ErrorCode.NOT_FOUND_ERROR);
+        byId.setSpaceRole(spaceUser.getSpaceRole());
         validSpaceUser(byId, false);
         boolean update = this.updateById(byId);
         return update;
