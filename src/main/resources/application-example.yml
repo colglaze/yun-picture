@@ -2,31 +2,102 @@ server:
   port: 8123
   servlet:
     context-path: /api
+    # cookie 3 天过期
+    session:
+      cookie:
+        max-age: 259200
 
 spring:
+  # session 配置
+  session:
+    store-type: redis
+    # session 3 天过期
+    timeout: 259200
+
+  # Redis 配置
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    timeout: 10000  # 增加超时时间
+    password: "xxx"  # 用引号包围密码
+    username: "xxx"  # 使用Redis服务器配置的default用户
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: -1ms
+      shutdown-timeout: 100ms
+    # 尝试使用Jedis连接器
+    # client-type: jedis
+
   application:
     name: yu-picture-backend
   # 数据库配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/yu_picture?useSSL=false&serverTimezone=UTC
-    username: yunpic
-    password: test123456
+    username: xxx
+    password: xxx
   # 开放更大的文件上传体积
   servlet:
     multipart:
       max-file-size: 10MB
 
+  # 空间图片分表
+  shardingsphere:
+    datasource:
+      names: yu_picture
+      yu_picture:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/yu_picture
+        username: xxx
+        password: xxx
+    rules:
+      sharding:
+        default-data-source-name: yu_picture
+        tables:
+          picture:
+            actual-data-nodes: yu_picture.picture  # 动态分表
+            table-strategy:
+              standard:
+                sharding-column: spaceId
+                sharding-algorithm-name: picture_sharding_algorithm  # 使用自定义分片算法
+          user:  # 添加 user 表配置
+            actual-data-nodes: yu_picture.user
+            table-strategy:
+              none:  # 不分片
+          space:  # 添加 space 表配置
+            actual-data-nodes: yu_picture.space
+            table-strategy:
+              none:  # 不分片
+          space_user:  # 添加 space_user 表配置
+            actual-data-nodes: yu_picture.space_user
+            table-strategy:
+              none:  # 不分片
+        sharding-algorithms:
+          picture_sharding_algorithm:
+            type: CLASS_BASED
+            props:
+              strategy: standard
+              algorithmClassName: com.colglaze.yunpicture.manager.sharding.PictureShardingAlgorithm
+    props:
+      sql-parser.lenient: true
+      # sql-show: true
+
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false
     # 仅在开发环境开启日志
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
       logic-delete-field: isDelete # 全局逻辑删除的实体字段名
       logic-delete-value: 1 # 逻辑已删除值（默认为 1）
       logic-not-delete-value: 0 # 逻辑未删除值（默认为 0）
+    enable-sql-runner: true
 
 # 接口文档配置
 knife4j:
@@ -39,12 +110,32 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.colglaze.yunpicture.controller
+  basic:
+    username: xxx
+    password: xxx
 
 # 对象存储配置（需要从腾讯云获取）
 cos:
   client:
-    host:
+    host: xxx
     secretId: xxx
     secretKey: xxx
     region: xxx
     bucket: xxx
+
+baidu:
+  ai:
+    appId: xxx
+    apiKey: xxx
+    secretKey: xxx
+
+# 阿里云 AI 配置
+aliYunAi:
+  apiKey: xxx
+
+logging:
+  level:
+    root: INFO
+    org.springframework.data.redis: DEBUG
+    io.lettuce.core: DEBUG
+    redis.clients.jedis: DEBUG
