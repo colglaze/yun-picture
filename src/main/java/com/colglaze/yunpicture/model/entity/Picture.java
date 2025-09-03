@@ -1,9 +1,7 @@
 package com.colglaze.yunpicture.model.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -132,6 +130,7 @@ public class Picture implements Serializable {
     /**
      * 空间 id（为空表示公共空间）
      */
+    @TableField(updateStrategy = FieldStrategy.NEVER)
     private Long spaceId;
 
     /**

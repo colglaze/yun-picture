@@ -198,6 +198,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
        throw new BusinessException(ErrorCode.PARAMS_ERROR,"原密码错误");
     }
+
+    @Override
+    public UserVO getUserVO(User user) {
+        UserVO userVO = new UserVO();
+        BeanUtil.copyProperties(user, userVO);
+        return userVO;
+    }
 }
 
 

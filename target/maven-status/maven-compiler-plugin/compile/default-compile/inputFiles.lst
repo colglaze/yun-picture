@@ -1,13 +1,16 @@
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\config\JsonConfig.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\model\dto\picture\CreatePictureOutPaintingTaskRequest.java
+D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\manager\websocket\model\PictureEditResponseMessage.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\model\dto\picture\PictureUploadRequest.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\manager\auth\model\SpaceUserAuthConfig.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\model\dto\user\UserAddRequest.java
+D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\manager\websocket\disruptor\PictureEditEventProducer.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\manager\auth\model\SpaceUserPermission.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\controller\SpaceController.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\controller\SpaceUserController.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\constant\UserConstant.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\common\PageRequest.java
+D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\manager\websocket\disruptor\PictureEditEventWorkHandler.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\annotation\AuthCheck.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\manager\auth\constant\SpaceUserPermissionConstant.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\mapper\SpaceMapper.java
@@ -15,8 +18,10 @@ D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\service\UserS
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\model\enums\PictureReviewStatusEnum.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\model\enums\SpaceLevelEnum.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\model\vo\CreateOutPaintingTaskResponse.java
+D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\manager\websocket\disruptor\PictureEditEventDisruptorConfig.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\common\BaseResponse.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\common\ResultUtils.java
+D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\manager\websocket\WsHandshakeInterceptor.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\mapper\PictureMapper.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\model\enums\UserRoleEnum.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\model\vo\GetOutPaintingTaskResponse.java
@@ -59,7 +64,9 @@ D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\model\entity\
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\model\vo\LoginUserVO.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\model\dto\space\SpaceEditRequest.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\aop\AuthInterceptor.java
+D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\manager\websocket\PictureEditHandler.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\model\vo\PictureTagCategory.java
+D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\manager\websocket\model\PictureEditMessageTypeEnum.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\model\dto\file\UploadPictureResult.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\config\CorsConfig.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\manager\auth\model\SpaceUserRole.java
@@ -71,6 +78,7 @@ D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\model\dto\use
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\service\impl\SpaceServiceImpl.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\utils\JwtUtil.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\service\PictureService.java
+D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\manager\websocket\model\PictureEditActionEnum.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\model\dto\picture\CreateOutPaintingTaskRequest.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\mapper\SpaceUserMapper.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\utils\RedisUtil.java
@@ -79,6 +87,8 @@ D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\model\enums\S
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\common\DeleteRequest.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\YunPictureApplication.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\model\dto\picture\ImageMetadata.java
+D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\manager\websocket\model\PictureEditRequestMessage.java
+D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\manager\websocket\config\WebSocketConfig.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\service\impl\UserServiceImpl.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\exceptions\ErrorCode.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\config\HttpRequestWrapperFilter.java
@@ -94,5 +104,6 @@ D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\mapper\UserMa
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\constant\RedisConstant.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\manager\picture\CosManager.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\controller\UserController.java
+D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\manager\websocket\disruptor\PictureEditEvent.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\model\dto\space\SpaceUserQueryRequest.java
 D:\IdeaWorkSpace\yun-picture\src\main\java\com\colglaze\yunpicture\manager\auth\servers\StpInterfaceImpl.java

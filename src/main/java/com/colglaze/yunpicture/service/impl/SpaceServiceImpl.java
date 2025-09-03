@@ -65,10 +65,10 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space>
     public Long createSpace(SpaceAddRequest spaceAddRequest, Long userId) {
         Space space = new Space();
         if (StrUtil.isBlank(spaceAddRequest.getSpaceName())) {
-            space.setSpaceName("默认空间");
+            spaceAddRequest.setSpaceName("默认空间");
         }
         if (ObjectUtil.isEmpty(spaceAddRequest.getSpaceLevel())) {
-            space.setSpaceLevel(SpaceLevelEnum.COMMON.getValue());
+            spaceAddRequest.setSpaceLevel(SpaceLevelEnum.COMMON.getValue());
         }
         if (ObjectUtil.isEmpty(spaceAddRequest.getSpaceType())) {
             spaceAddRequest.setSpaceType(SpaceTypeEnum.PRIVATE.getValue());

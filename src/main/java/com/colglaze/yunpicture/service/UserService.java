@@ -69,4 +69,11 @@ public interface UserService extends IService<User> {
      * @return
      */
     Boolean updatePassword(PasswordRequest passwordRequest, HttpServletRequest request);
+
+    /**
+     * 获取用户vo，数据脱敏
+     * @param user
+     * @return
+     */
+    UserVO getUserVO(User user);
 }
